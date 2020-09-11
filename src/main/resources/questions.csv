@@ -1,0 +1,7 @@
+free;What is your name?;
+free;What is your surname?;
+multiple;How old are you?;<18;18-25;25-30;30-40;>40;
+alternative;Do you know java?;Yes;No;
+alternative;Do you know Spring?;Yes;No;
+alternative;Do you know Hibernate?;Yes;No;
+alternative;Do you want to become a Spring expert?;Yes;No;
