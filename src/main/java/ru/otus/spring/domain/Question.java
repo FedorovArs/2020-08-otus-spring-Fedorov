@@ -13,4 +13,14 @@ public class Question {
     private QuestionType type;
     private String text;
     private List<String> answers;
+    private String correctAnswer;
+
+    public Question(QuestionType type, String text, List<String> answers, String correctAnswer) {
+        this.type = type;
+        this.text = text;
+        this.answers = answers;
+        this.correctAnswer = correctAnswer;
+    }
+
+    private String userAnswer;
 }

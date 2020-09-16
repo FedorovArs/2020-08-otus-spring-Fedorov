@@ -1,5 +1,6 @@
 package ru.otus.spring.service;
 
+import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.ResourceLoaderDao;
 import ru.otus.spring.domain.Question;
 
@@ -7,6 +8,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class QuestionServiceSimple implements QuestionService {
 
     public static final String DEFAULT_DELIMITER = ";";
