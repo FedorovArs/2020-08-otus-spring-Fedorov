@@ -4,7 +4,11 @@ import ru.otus.spring.domain.Question;
 
 import java.util.List;
 
-public interface QuestionService {
+public interface DataProducer {
+
+    String DEFAULT_DELIMITER = ";";
 
     List<Question> getQuestionsList();
+
+    String getLocalizeMsg(String msgKey);
 }

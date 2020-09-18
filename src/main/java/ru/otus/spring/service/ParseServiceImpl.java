@@ -11,16 +11,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-public class ParseServiceSimple implements ParseService {
-
-    public static final int QUESTION_TYPE_INDEX = 0;
-    public static final int QUESTION_TEXT_INDEX = 1;
-    public static final int ANSWERS_TEXT_INDEX = 2;
-    public static final int CORRECT_ANSWER_TEXT_INDEX = 3;
+public class ParseServiceImpl implements ParseService {
 
     @Override
     public List<String> parseCsvResource(InputStream resource) {
@@ -53,7 +47,7 @@ public class ParseServiceSimple implements ParseService {
         String correctAnswer = row[CORRECT_ANSWER_TEXT_INDEX];
         QuestionType questionType = QuestionType.valueOf(type.toUpperCase());
 
-            List<String> answers = Arrays.asList(row[ANSWERS_TEXT_INDEX].split(","));
-            return new Question(questionType, text, answers, correctAnswer);
+        List<String> answers = Arrays.asList(row[ANSWERS_TEXT_INDEX].split(ANSWERS_DEFAULT_DELIMITER));
+        return new Question(questionType, text, answers, correctAnswer);
     }
 }

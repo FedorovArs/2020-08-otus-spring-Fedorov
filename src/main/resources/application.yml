@@ -1,0 +1,19 @@
+questions:
+  min:
+    value: 75
+  file:
+    en_path: /en_questions.csv
+    ru_path: /ru_questions.csv
+
+application:
+  locale: ru_RU
+#  locale: en_US
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  messages:
+    basename: bundle
+    encoding: UTF-8
+    fallback-to-system-locale: false
