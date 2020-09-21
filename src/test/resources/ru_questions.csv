@@ -1,0 +1,5 @@
+multiple;Какое из следующих слов не является ключевым словом в языке Java?;new,static,Integer,goto;Integer;
+alternative;Java-это строго типизированный язык программирования?;Да,Нет;Да;
+multiple;Что из следующего является не проверяемым исключением в Java?;NullPointerException,Exception,RuntimeException,IOException;RuntimeException;
+alternative;Использует ли язык программирования Java сборщик мусора?;Да,Нет;Да;
+alternative;Какая структура данных не содержит дубликатов?;List,Set,Map;Set;

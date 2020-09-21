@@ -1,7 +1,6 @@
 package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Question;
 
@@ -10,14 +9,20 @@ import java.util.List;
 
 import static ru.otus.spring.Utils.scan;
 
-@PropertySource("classpath:application.properties")
-@Service(value = "testService")
+@Service
 public class TestServiceSimple implements TestService {
 
-    private int minSuccessfulValue;
+    private final int minSuccessfulValue;
+    private final DataProducerComponent dataProducerComponent;
+    private final OpenedConsoleIOService openedConsoleIOService;
 
-    public TestServiceSimple(@Value("${questions.min.value}") int minSuccessfulValue) {
+    public TestServiceSimple(@Value("${questions.min.value}") int minSuccessfulValue,
+                             DataProducerComponent dataProducerComponent,
+                             OpenedConsoleIOService openedConsoleIOService
+    ) {
         this.minSuccessfulValue = minSuccessfulValue;
+        this.dataProducerComponent = dataProducerComponent;
+        this.openedConsoleIOService = openedConsoleIOService;
     }
 
     @Override
@@ -27,8 +32,12 @@ public class TestServiceSimple implements TestService {
 
     @Override
     public void runTest(List<Question> questions) {
-        String name = askUserAndGetAnswer("What is your name?");
-        String suname = askUserAndGetAnswer("What is your suname?");
+//        String name = askUserAndGetAnswer(dataProducerComponent.getLocalizeMsg("ask.name"));
+        openedConsoleIOService.out(dataProducerComponent.getLocalizeMsg("ask.name"));
+        String name = openedConsoleIOService.readString();
+
+        openedConsoleIOService.out(dataProducerComponent.getLocalizeMsg("ask.surname"));
+        String surname = openedConsoleIOService.readString();
 
         //mix questions
         Collections.shuffle(questions);
@@ -37,19 +46,20 @@ public class TestServiceSimple implements TestService {
         for (int i = 0; i < questions.size(); i++) {
             Question question = questions.get(i);
 
-            System.out.printf("%s. Question: %s%n", i + 1, question.getText());
-            System.out.printf("Possible answers: %s%n", question.getAnswers());
+            openedConsoleIOService.out(String.format("%s. " + dataProducerComponent.getLocalizeMsg("question.word") + ": %s", i + 1, question.getText()));
+            openedConsoleIOService.out(String.format(dataProducerComponent.getLocalizeMsg("possible.answers") + ": %s", question.getAnswers()));
 
-            question.setUserAnswer(scan.nextLine().trim());
-            System.out.println("==================================================");
+            question.setUserAnswer(openedConsoleIOService.readString());
+            openedConsoleIOService.out("=========================================================================");
         }
 
-        int passedTest = testResults(questions);
-        System.out.println(String.format("Dear %s %s You answered %s%% of the questions correctly", suname, name, passedTest));
-        System.out.println(String.format("%s. Bye!", passedTest < minSuccessfulValue ? "Test failed" : "Test passed"));
+        int passedTest = getTestPercentsResults(questions);
+        openedConsoleIOService.out(String.format(dataProducerComponent.getLocalizeMsg("result.msg"), surname, name, passedTest));
+        openedConsoleIOService.out(passedTest < minSuccessfulValue ? dataProducerComponent.getLocalizeMsg("test.failed.msg") :
+                dataProducerComponent.getLocalizeMsg("test.passed.msg"));
     }
 
-    private int testResults(List<Question> questions) {
+    private int getTestPercentsResults(List<Question> questions) {
         int result = 0;
 
         for (Question question : questions) {
@@ -59,8 +69,6 @@ public class TestServiceSimple implements TestService {
         }
 
         return (int) (((double) result) / questions.size() * 100);
-
-
     }
 
     private String askUserAndGetAnswer(String answer) {
