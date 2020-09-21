@@ -1,17 +1,22 @@
 package ru.otus.spring.dao;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Component("resourceLoaderDao")
+@PropertySource("classpath:application.properties")
 public class ResourceLoaderDaoSimple implements ResourceLoaderDao {
 
     private String resourcePath;
+
+    public ResourceLoaderDaoSimple(@Value("${questions.file.path}") String resourcePath) {
+        this.resourcePath = resourcePath;
+    }
 
     @Override
     public InputStream getResource() {
