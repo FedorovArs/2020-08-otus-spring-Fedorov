@@ -6,6 +6,18 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class Book {
-    private final int id;
-    private final String name;
+    private Long id;
+    private String name;
+    private Author author;
+    private Genre genre;
+
+    @Override
+    public String toString() {
+        return '(' +
+                "id=" + id +
+                ", название='" + name +
+                ", автор=" + author.getName() +
+                ", жанр=" + genre.getName() +
+                ')';
+    }
 }

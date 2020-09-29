@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class GenreDaoJdbc implements BaseDao<Genre> {
+public class GenreDaoJdbc implements GenreDao {
 
     private final NamedParameterJdbcOperations namedJdbc;
     private final ResultSetExtractor<Optional<Genre>> resultSetExtractor;
@@ -25,46 +25,48 @@ public class GenreDaoJdbc implements BaseDao<Genre> {
             if (!resultSet.next()) {
                 return Optional.empty();
             } else {
-                return Optional.of(new Genre(resultSet.getInt("id"), resultSet.getString("name")));
+                return Optional.of(new Genre(resultSet.getLong("id"), resultSet.getString("name")));
             }
         };
 
         this.rowMapper = (resultSet, i) ->
-                new Genre(resultSet.getInt("id"), resultSet.getString("name"));
+                new Genre(resultSet.getLong("id"), resultSet.getString("name"));
     }
 
-    @Override
     public int count() {
         return namedJdbc.queryForObject("SELECT COUNT(*) FROM GENRES", Collections.emptyMap(), Integer.class);
     }
 
-    @Override
-    public void insert(String name) {
-        namedJdbc.update("INSERT INTO GENRES(name) VALUES :name", Map.of("name", name));
+    public void insert(Genre genre) {
+        namedJdbc.update("INSERT INTO GENRES(name) VALUES :name", Map.of("name", genre.getName()));
     }
 
-    @Override
     public Optional<Genre> getById(int id) {
         return namedJdbc.query("SELECT * FROM GENRES WHERE id = :id", Map.of("id", id), this.resultSetExtractor);
     }
 
-    @Override
-    public Optional<Genre> getByNameIgnoreCase(String name) {
-        return namedJdbc.query("SELECT * FROM GENRES WHERE lower(name) = :name", Map.of("name", name.toLowerCase()), this.resultSetExtractor);
+    public Optional<Genre> getByNameIgnoreCase(Genre genre) {
+        return namedJdbc.query("SELECT * FROM GENRES WHERE lower(name) = :name", Map.of("name", genre.getName().toLowerCase()), this.resultSetExtractor);
     }
 
-    @Override
     public List<Genre> getAll() {
         return namedJdbc.query("SELECT * FROM GENRES", Collections.emptyMap(), this.rowMapper);
     }
 
-    @Override
     public void deleteById(int id) {
         namedJdbc.update("DELETE FROM GENRES WHERE id = :id", Map.of("id", id));
     }
 
-    @Override
-    public void updateById(int id, String name) {
-        namedJdbc.update("UPDATE GENRES SET name = :name WHERE id = :id", Map.of("id", id, "name", name));
+    public void updateById(Genre genre) {
+        namedJdbc.update("UPDATE GENRES SET name = :name WHERE id = :id", Map.of("id", genre.getId(), "name", genre.getName()));
+    }
+
+    public Genre getByNameOrCreate(Genre genre) {
+        Optional<Genre> genreFromDb = this.getByNameIgnoreCase(genre);
+        if (genreFromDb.isEmpty()) {
+            this.insert(genre);
+            genreFromDb = this.getByNameIgnoreCase(genre);
+        }
+        return genreFromDb.get();
     }
 }

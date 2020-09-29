@@ -6,6 +6,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class Genre {
-    private final int id;
-    private final String name;
+    private Long id;
+    private String name;
 }
