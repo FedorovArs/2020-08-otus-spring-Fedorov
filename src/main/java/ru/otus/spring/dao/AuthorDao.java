@@ -10,15 +10,15 @@ public interface AuthorDao {
 
     public int count();
 
-    void insert(Author author);
+    long insert(Author author);
 
-    Optional<Author> getById(int id);
+    Optional<Author> getById(long id);
 
     Optional<Author> getByNameIgnoreCase(Author author);
 
     List<Author> getAll();
 
-    void deleteById(int id);
+    void deleteById(long id);
 
     void updateById(Author author);
 

@@ -10,15 +10,15 @@ public interface GenreDao {
 
     int count();
 
-    void insert(Genre genre);
+    long insert(Genre genre);
 
-    Optional<Genre> getById(int id);
+    Optional<Genre> getById(long id);
 
     Optional<Genre> getByNameIgnoreCase(Genre genre);
 
     List<Genre> getAll();
 
-    void deleteById(int id);
+    void deleteById(long id);
 
     void updateById(Genre genre);
 

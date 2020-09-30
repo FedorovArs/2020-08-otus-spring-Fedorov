@@ -2,7 +2,10 @@ package ru.otus.spring.dao;
 
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Genre;
 
@@ -21,13 +24,7 @@ public class GenreDaoJdbc implements GenreDao {
     public GenreDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedJdbc = namedParameterJdbcOperations;
 
-        this.resultSetExtractor = (resultSet) -> {
-            if (!resultSet.next()) {
-                return Optional.empty();
-            } else {
-                return Optional.of(new Genre(resultSet.getLong("id"), resultSet.getString("name")));
-            }
-        };
+        this.resultSetExtractor = (resultSet) -> !resultSet.next() ? Optional.empty() : Optional.of(new Genre(resultSet.getLong("id"), resultSet.getString("name")));
 
         this.rowMapper = (resultSet, i) ->
                 new Genre(resultSet.getLong("id"), resultSet.getString("name"));
@@ -37,11 +34,16 @@ public class GenreDaoJdbc implements GenreDao {
         return namedJdbc.queryForObject("SELECT COUNT(*) FROM GENRES", Collections.emptyMap(), Integer.class);
     }
 
-    public void insert(Genre genre) {
-        namedJdbc.update("INSERT INTO GENRES(name) VALUES :name", Map.of("name", genre.getName()));
+    public long insert(Genre genre) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("name", genre.getName());
+
+        namedJdbc.update("INSERT INTO GENRES(name) VALUES :name", parameterSource, keyHolder);
+        return keyHolder.getKey().longValue();
     }
 
-    public Optional<Genre> getById(int id) {
+    public Optional<Genre> getById(long id) {
         return namedJdbc.query("SELECT * FROM GENRES WHERE id = :id", Map.of("id", id), this.resultSetExtractor);
     }
 
@@ -53,7 +55,7 @@ public class GenreDaoJdbc implements GenreDao {
         return namedJdbc.query("SELECT * FROM GENRES", Collections.emptyMap(), this.rowMapper);
     }
 
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         namedJdbc.update("DELETE FROM GENRES WHERE id = :id", Map.of("id", id));
     }
 
@@ -62,11 +64,9 @@ public class GenreDaoJdbc implements GenreDao {
     }
 
     public Genre getByNameOrCreate(Genre genre) {
-        Optional<Genre> genreFromDb = this.getByNameIgnoreCase(genre);
-        if (genreFromDb.isEmpty()) {
-            this.insert(genre);
-            genreFromDb = this.getByNameIgnoreCase(genre);
-        }
-        return genreFromDb.get();
+        return this.getByNameIgnoreCase(genre).orElseGet(() -> {
+            long id = this.insert(genre);
+            return this.getById(id).get();
+        });
     }
 }

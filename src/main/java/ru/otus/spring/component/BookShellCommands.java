@@ -1,4 +1,4 @@
-package ru.otus.spring;
+package ru.otus.spring.component;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;

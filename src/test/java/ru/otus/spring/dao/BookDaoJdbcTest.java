@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @JdbcTest
 @DisplayName("DAO для работы с книгами должно:")
 @Import(BookDaoJdbc.class)
-class BaseFullDaoTest {
+class BookDaoJdbcTest {
 
     public static final int DEFAULT_ROW_COUNT_AT_START = 4;
     public static final int FAKE_ID = 1000;
