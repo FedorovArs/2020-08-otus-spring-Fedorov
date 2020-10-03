@@ -1,18 +1,18 @@
 package ru.otus.spring.dao;
 
-import ru.otus.spring.domain.Genre;
+import ru.otus.spring.entity.Genre;
 
 import java.util.List;
 import java.util.Optional;
 
 // Методов объявлено больше чем используется, что бы попрактиковаться и набить руку.
-public interface GenreDao {
+public interface GenreRepository {
 
-    int count();
+    long count();
 
-    long insert(Genre genre);
+    Genre save(Genre genre);
 
-    Optional<Genre> getById(long id);
+    Optional<Genre> findById(long id);
 
     Optional<Genre> getByNameIgnoreCase(Genre genre);
 

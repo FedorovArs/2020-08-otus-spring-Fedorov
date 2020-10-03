@@ -1,41 +1,51 @@
 package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
-import ru.otus.spring.dao.AuthorDaoJdbc;
-import ru.otus.spring.dao.BookDaoJdbc;
-import ru.otus.spring.dao.GenreDaoJdbc;
-import ru.otus.spring.domain.Author;
-import ru.otus.spring.domain.Book;
-import ru.otus.spring.domain.Genre;
+import org.springframework.transaction.annotation.Transactional;
+import ru.otus.spring.dao.AuthorRepositoryJpa;
+import ru.otus.spring.dao.BookRepositoryJpa;
+import ru.otus.spring.dao.CommentRepositoryJpa;
+import ru.otus.spring.dao.GenreRepositoryJpa;
+import ru.otus.spring.entity.Author;
+import ru.otus.spring.entity.Book;
+import ru.otus.spring.entity.Comment;
+import ru.otus.spring.entity.Genre;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final BookDaoJdbc bookDaoJdbc;
-    private final AuthorDaoJdbc authorDaoJdbc;
-    private final GenreDaoJdbc genreDaoJdbc;
+    private final BookRepositoryJpa bookRepositoryJpa;
+    private final AuthorRepositoryJpa authorRepositoryJpa;
+    private final GenreRepositoryJpa genreRepositoryJpa;
+    private final CommentRepositoryJpa commentRepositoryJpa;
 
-    public BookServiceImpl(BookDaoJdbc bookDaoJdbc, AuthorDaoJdbc authorDaoJdbc,
-                           GenreDaoJdbc genreDaoJdbc) {
+    public BookServiceImpl(BookRepositoryJpa bookRepositoryJpa, AuthorRepositoryJpa authorRepositoryJpa,
+                           GenreRepositoryJpa genreRepositoryJpa, CommentRepositoryJpa commentRepositoryJpa) {
 
-        this.bookDaoJdbc = bookDaoJdbc;
-        this.authorDaoJdbc = authorDaoJdbc;
-        this.genreDaoJdbc = genreDaoJdbc;
+        this.bookRepositoryJpa = bookRepositoryJpa;
+        this.authorRepositoryJpa = authorRepositoryJpa;
+        this.genreRepositoryJpa = genreRepositoryJpa;
+        this.commentRepositoryJpa = commentRepositoryJpa;
     }
 
-    public List<Book> getAll() {
-        return bookDaoJdbc.getAll();
+    @Transactional(readOnly = true)
+    public String getAll() {
+        return bookRepositoryJpa.getAll().stream()
+                .map(Book::toString)
+                .collect(Collectors.joining(",\n"));
     }
 
+    @Transactional
     public void deleteById(long id) {
-        bookDaoJdbc.deleteById(id);
+        bookRepositoryJpa.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public String getById(long id) {
-        Optional<Book> byId = bookDaoJdbc.getById(id);
+        Optional<Book> byId = bookRepositoryJpa.getById(id);
         if (byId.isPresent()) {
             return byId.get().toString();
         } else {
@@ -43,17 +53,20 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    public String addNewBook(String bookName, String authorName, String genreName) {
+    @Transactional
+    public String addNewBook(String bookName, String authorName, String genreName, String newComment) {
 
-        Author author = authorDaoJdbc.getByNameOrCreate(new Author(null, authorName));
-        Genre genre = genreDaoJdbc.getByNameOrCreate(new Genre(null, genreName));
+        Author author = authorRepositoryJpa.getByNameOrCreate(new Author(null, authorName));
+        Genre genre = genreRepositoryJpa.getByNameOrCreate(new Genre(null, genreName));
+        Comment comment = commentRepositoryJpa.getByTextOrCreate(new Comment(null, newComment));
 
-        bookDaoJdbc.insert(new Book(null, bookName, author, genre));
+        bookRepositoryJpa.save(new Book(null, bookName, author, genre, comment));
         return "Книга успешно добавлена";
     }
 
-    public String updateBook(long id, String newBookName, String newAuthor, String newGenre) {
-        Optional<Book> optionalBook = bookDaoJdbc.getById(id);
+    @Transactional
+    public String updateBook(long id, String newBookName, String newAuthor, String newGenre, String newComment) {
+        Optional<Book> optionalBook = bookRepositoryJpa.getById(id);
 
         if (optionalBook.isEmpty()) {
             return "Книга с указанным id отсутсвует в БД";
@@ -65,10 +78,11 @@ public class BookServiceImpl implements BookService {
                 return "Книги с указанным id уже имеет указанные атрибуты. Изменения не требуются.";
             }
 
-            Author author = authorDaoJdbc.getByNameOrCreate(new Author(null, newAuthor));
-            Genre genre = genreDaoJdbc.getByNameOrCreate(new Genre(null, newGenre));
+            Author author = authorRepositoryJpa.getByNameOrCreate(new Author(null, newAuthor));
+            Genre genre = genreRepositoryJpa.getByNameOrCreate(new Genre(null, newGenre));
+            Comment comment = commentRepositoryJpa.getByTextOrCreate(new Comment(null, newComment));
 
-            bookDaoJdbc.updateById(new Book(id, newBookName, author, genre));
+            bookRepositoryJpa.updateById(new Book(id, newBookName, author, genre, comment));
             return "Книга успешно обновлена";
         }
     }

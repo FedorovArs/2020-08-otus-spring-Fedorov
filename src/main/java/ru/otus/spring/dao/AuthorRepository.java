@@ -1,18 +1,18 @@
 package ru.otus.spring.dao;
 
-import ru.otus.spring.domain.Author;
+import ru.otus.spring.entity.Author;
 
 import java.util.List;
 import java.util.Optional;
 
 // Методов объявлено больше чем используется, что бы попрактиковаться и набить руку.
-public interface AuthorDao {
+public interface AuthorRepository {
 
-    public int count();
+    public long count();
 
-    long insert(Author author);
+    Author save(Author author);
 
-    Optional<Author> getById(long id);
+    Optional<Author> findById(long id);
 
     Optional<Author> getByNameIgnoreCase(Author author);
 

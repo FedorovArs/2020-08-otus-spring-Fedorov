@@ -1,15 +1,15 @@
 package ru.otus.spring.dao;
 
-import ru.otus.spring.domain.Book;
+import ru.otus.spring.entity.Book;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BookDao {
+public interface BookRepository {
 
-    int count();
+    long count();
 
-    long insert(Book book);
+    Book save(Book book);
 
     Optional<Book> getById(long id);
 

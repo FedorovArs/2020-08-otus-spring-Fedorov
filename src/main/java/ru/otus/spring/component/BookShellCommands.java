@@ -3,10 +3,7 @@ package ru.otus.spring.component;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.otus.spring.domain.Book;
 import ru.otus.spring.service.BookServiceImpl;
-
-import java.util.stream.Collectors;
 
 @ShellComponent
 public class BookShellCommands {
@@ -19,26 +16,26 @@ public class BookShellCommands {
 
     @ShellMethod(value = "Get all", key = {"all"})
     public String all() {
-        return bookServiceImpl.getAll().stream()
-                .map(Book::toString)
-                .collect(Collectors.joining(",\n"));
+        return bookServiceImpl.getAll();
     }
 
     @ShellMethod(value = "Create book", key = {"create"})
     public String create(@ShellOption String name,
                          @ShellOption String author,
-                         @ShellOption String genre) {
+                         @ShellOption String genre,
+                         @ShellOption String comment) {
 
-        return bookServiceImpl.addNewBook(name.trim(), author.trim(), genre.trim());
+        return bookServiceImpl.addNewBook(name.trim(), author.trim(), genre.trim(), comment.trim());
     }
 
     @ShellMethod(value = "Update book", key = {"update"})
     public String update(@ShellOption(defaultValue = "1") long id,
                          @ShellOption String name,
                          @ShellOption String author,
-                         @ShellOption String genre) {
+                         @ShellOption String genre,
+                         @ShellOption String comment) {
 
-        return bookServiceImpl.updateBook(id, name.trim(), author.trim(), genre.trim());
+        return bookServiceImpl.updateBook(id, name.trim(), author.trim(), genre.trim(), comment.trim());
     }
 
     @ShellMethod(value = "Get by id", key = {"get"})

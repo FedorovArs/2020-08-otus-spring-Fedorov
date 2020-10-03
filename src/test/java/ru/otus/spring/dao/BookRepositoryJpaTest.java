@@ -3,9 +3,10 @@ package ru.otus.spring.dao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import ru.otus.spring.domain.Book;
+import ru.otus.spring.entity.Book;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,37 +14,41 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@JdbcTest
+@DataJpaTest
 @DisplayName("DAO для работы с книгами должно:")
-@Import(BookDaoJdbc.class)
-class BookDaoJdbcTest {
+@Import(BookRepositoryJpa.class)
+class BookRepositoryJpaTest {
 
     public static final int DEFAULT_ROW_COUNT_AT_START = 4;
     public static final int FAKE_ID = 1000;
+
     @Autowired
-    private BookDaoJdbc bookDaoJdbc;
+    private BookRepositoryJpa bookRepositoryJpa;
+
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("отдавать кол-во записей в таблице")
     @Test
     void shouldGetCountRows() {
-        int count = bookDaoJdbc.count();
+        long count = bookRepositoryJpa.count();
         assertThat(count).isEqualTo(DEFAULT_ROW_COUNT_AT_START);
     }
 
     @DisplayName("возвращать одинаковое кол-во записей методом count и getAll")
     @Test
     void shouldReturnSameNumberOfRecords() {
-        int count = bookDaoJdbc.count();
-        List<Book> all = bookDaoJdbc.getAll();
-        assertThat(all).hasSize(count);
+        long count = bookRepositoryJpa.count();
+        List<Book> all = bookRepositoryJpa.getAll();
+        assertThat(all).hasSize((int) count);
     }
 
     @DisplayName("давать книгу (BookFull) по id")
     @Test
     void shouldGetFullBookById() {
-        List<Book> allBooks = bookDaoJdbc.getAll();
+        List<Book> allBooks = bookRepositoryJpa.getAll();
         Book firstBook = allBooks.get(0);
-        Optional<Book> optionalBook = bookDaoJdbc.getById(firstBook.getId());
+        Optional<Book> optionalBook = bookRepositoryJpa.getById(firstBook.getId());
         assertAll(() -> {
             assertThat(optionalBook.isPresent()).isTrue();
             assertThat(optionalBook.get().getId()).isEqualTo(firstBook.getId());
@@ -56,9 +61,9 @@ class BookDaoJdbcTest {
     @DisplayName("давать книгу (BookFullView) по id")
     @Test
     void shouldGetFullViewBookById() {
-        List<Book> allBooks = bookDaoJdbc.getAll();
+        List<Book> allBooks = bookRepositoryJpa.getAll();
         Book firstBook = allBooks.get(0);
-        var optionalBook = bookDaoJdbc.getById(firstBook.getId());
+        var optionalBook = bookRepositoryJpa.getById(firstBook.getId());
         assertAll(() -> {
             assertThat(optionalBook.isPresent()).isTrue();
             assertThat(optionalBook.get().getId()).isEqualTo(firstBook.getId());
@@ -71,11 +76,11 @@ class BookDaoJdbcTest {
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        var allBooks = bookDaoJdbc.getAll();
+        var allBooks = bookRepositoryJpa.getAll();
         var bookForDelete = allBooks.get(0);
-        bookDaoJdbc.deleteById(bookForDelete.getId());
+        bookRepositoryJpa.deleteById(bookForDelete.getId());
 
-        var allBooksAfterDelete = bookDaoJdbc.getAll();
+        var allBooksAfterDelete = bookRepositoryJpa.getAll();
         assertAll(() -> {
             assertThat(allBooksAfterDelete).hasSizeLessThan(allBooks.size());
             assertThat(allBooksAfterDelete)
@@ -86,9 +91,9 @@ class BookDaoJdbcTest {
     @DisplayName("не должен удалять книгу если id отсутствует в БД")
     @Test
     void shouldNotDeleteBookIfIdIsNotInDatabase() {
-        var allBooksBefore = bookDaoJdbc.getAll();
-        bookDaoJdbc.deleteById(FAKE_ID);
-        var allBooksAfter = bookDaoJdbc.getAll();
+        var allBooksBefore = bookRepositoryJpa.getAll();
+        bookRepositoryJpa.deleteById(FAKE_ID);
+        var allBooksAfter = bookRepositoryJpa.getAll();
 
         assertAll(() -> {
             assertThat(allBooksBefore.size()).isEqualTo(allBooksAfter.size());
@@ -99,14 +104,15 @@ class BookDaoJdbcTest {
     @DisplayName("должен добавлять книгу в БД")
     @Test
     void shouldInsertBook() {
-        var allBooksBefore = bookDaoJdbc.getAll();
+        var allBooksBefore = bookRepositoryJpa.getAll();
         var bookName = allBooksBefore.get(1).getName();
         var author = allBooksBefore.get(0).getAuthor();
         var genre = allBooksBefore.get(2).getGenre();
+        var comment = allBooksBefore.get(3).getComment();
 
-        Book bookForSave = new Book(null, bookName, author, genre);
-        bookDaoJdbc.insert(bookForSave);
-        var allBooksAfter = bookDaoJdbc.getAll();
+        Book bookForSave = new Book(null, bookName, author, genre, comment);
+        bookRepositoryJpa.save(bookForSave);
+        var allBooksAfter = bookRepositoryJpa.getAll();
 
         assertAll(() -> {
             assertThat(allBooksAfter).hasSizeGreaterThan(allBooksBefore.size());
@@ -117,13 +123,14 @@ class BookDaoJdbcTest {
             assertThat(savedBook.getName()).isEqualTo(bookName);
             assertThat(savedBook.getAuthor()).isEqualTo(author);
             assertThat(savedBook.getGenre()).isEqualTo(genre);
+            assertThat(savedBook.getComment()).isEqualTo(comment);
         });
     }
 
     @DisplayName("должен обновлять книгу в БД")
     @Test
     void shouldUpdateBook() {
-        var allBooksBefore = bookDaoJdbc.getAll();
+        var allBooksBefore = bookRepositoryJpa.getAll();
 
         var bookName = allBooksBefore.get(1).getName();
         var author = allBooksBefore.get(1).getAuthor();
@@ -140,9 +147,9 @@ class BookDaoJdbcTest {
         bookForUpdate.setName(bookName);
         bookForUpdate.setAuthor(author);
         bookForUpdate.setGenre(genre);
-        bookDaoJdbc.updateById(bookForUpdate);
+        bookRepositoryJpa.updateById(bookForUpdate);
 
-        Optional<Book> bookAfterUpdate = bookDaoJdbc.getById(bookForUpdate.getId());
+        Optional<Book> bookAfterUpdate = bookRepositoryJpa.getById(bookForUpdate.getId());
 
         assertAll(() -> {
             assertThat(bookAfterUpdate.isPresent()).isTrue();
