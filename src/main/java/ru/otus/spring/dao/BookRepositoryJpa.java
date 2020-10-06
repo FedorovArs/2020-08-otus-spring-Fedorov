@@ -35,13 +35,13 @@ public class BookRepositoryJpa implements BookRepository {
         }
     }
 
-    public Optional<Book> getById(long id) {
+    public Optional<Book> findById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
     }
 
-    public List<Book> getAll() {
+    public List<Book> findAll() {
         EntityGraph<?> authorsEntityGraph = em.getEntityGraph("authors-entity-graph");
-        TypedQuery<Book> query = em.createQuery("Select b from Book b join fetch b.genre join fetch b.comment", Book.class);
+        TypedQuery<Book> query = em.createQuery("Select b from Book b join fetch b.genre", Book.class);
         query.setHint("javax.persistence.fetchgraph", authorsEntityGraph);
         return query.getResultList();
     }

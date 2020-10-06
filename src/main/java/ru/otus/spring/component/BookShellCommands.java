@@ -22,10 +22,9 @@ public class BookShellCommands {
     @ShellMethod(value = "Create book", key = {"create"})
     public String create(@ShellOption String name,
                          @ShellOption String author,
-                         @ShellOption String genre,
-                         @ShellOption String comment) {
+                         @ShellOption String genre) {
 
-        return bookServiceImpl.addNewBook(name.trim(), author.trim(), genre.trim(), comment.trim());
+        return bookServiceImpl.addNewBook(name.trim(), author.trim(), genre.trim());
     }
 
     @ShellMethod(value = "Update book", key = {"update"})

@@ -3,8 +3,13 @@ package ru.otus.spring.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "books")
 @AllArgsConstructor
@@ -30,9 +35,24 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Genre genre;
 
-    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "fk_book_comment_id"))
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Comment comment;
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    public Book(Long id, String name, Author author, Genre genre) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+    }
+
+    public Book(Long id, String name, Author author, Genre genre, Comment comment) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.comments = Collections.singletonList(comment);
+    }
 
     @Override
     public String toString() {
@@ -41,7 +61,9 @@ public class Book {
                 ", название='" + name +
                 ", автор=" + author.getName() +
                 ", жанр=" + genre.getName() +
-                ", комментарий=" + (comment == null ? "Комментарий отсутствует" : comment.getText()) +
+                ", комментарии=" + (comments == null || comments.isEmpty()
+                ? "Комментарии отсутствуют"
+                : comments.stream().map(Comment::getText).collect(Collectors.joining(", "))) +
                 ')';
     }
 }

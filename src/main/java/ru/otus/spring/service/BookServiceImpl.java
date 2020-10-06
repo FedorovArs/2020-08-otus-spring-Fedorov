@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     public String getAll() {
-        return bookRepositoryJpa.getAll().stream()
+        return bookRepositoryJpa.findAll().stream()
                 .map(Book::toString)
                 .collect(Collectors.joining(",\n"));
     }
@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     public String getById(long id) {
-        Optional<Book> byId = bookRepositoryJpa.getById(id);
+        Optional<Book> byId = bookRepositoryJpa.findById(id);
         if (byId.isPresent()) {
             return byId.get().toString();
         } else {
@@ -54,19 +54,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    public String addNewBook(String bookName, String authorName, String genreName, String newComment) {
+    public String addNewBook(String bookName, String authorName, String genreName) {
 
         Author author = authorRepositoryJpa.getByNameOrCreate(new Author(null, authorName));
         Genre genre = genreRepositoryJpa.getByNameOrCreate(new Genre(null, genreName));
-        Comment comment = commentRepositoryJpa.getByTextOrCreate(new Comment(null, newComment));
 
-        bookRepositoryJpa.save(new Book(null, bookName, author, genre, comment));
+        bookRepositoryJpa.save(new Book(null, bookName, author, genre));
         return "Книга успешно добавлена";
     }
 
     @Transactional
     public String updateBook(long id, String newBookName, String newAuthor, String newGenre, String newComment) {
-        Optional<Book> optionalBook = bookRepositoryJpa.getById(id);
+        Optional<Book> optionalBook = bookRepositoryJpa.findById(id);
 
         if (optionalBook.isEmpty()) {
             return "Книга с указанным id отсутсвует в БД";
@@ -80,7 +79,7 @@ public class BookServiceImpl implements BookService {
 
             Author author = authorRepositoryJpa.getByNameOrCreate(new Author(null, newAuthor));
             Genre genre = genreRepositoryJpa.getByNameOrCreate(new Genre(null, newGenre));
-            Comment comment = commentRepositoryJpa.getByTextOrCreate(new Comment(null, newComment));
+            Comment comment = commentRepositoryJpa.getByTextOrCreate(new Comment(null, book, newComment));
 
             bookRepositoryJpa.updateById(new Book(id, newBookName, author, genre, comment));
             return "Книга успешно обновлена";

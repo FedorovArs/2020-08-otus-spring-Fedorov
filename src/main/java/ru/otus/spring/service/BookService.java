@@ -8,7 +8,7 @@ public interface BookService {
 
     String getById(long id);
 
-    String addNewBook(String bookName, String authorName, String genreName, String comment);
+    String addNewBook(String bookName, String authorName, String genreName);
 
     String updateBook(long id, String newBookName, String newAuthor, String newGenre, String newComment);
 

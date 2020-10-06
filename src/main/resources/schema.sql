@@ -13,26 +13,27 @@ CREATE TABLE GENRES
     name VARCHAR(255)
 );
 
+DROP TABLE IF EXISTS BOOKS;
+CREATE TABLE BOOKS
+(
+    id        BIGINT auto_increment PRIMARY KEY,
+    name      VARCHAR(255),
+    author_id BIGINT,
+    genre_id  BIGINT,
+
+    FOREIGN KEY (author_id) REFERENCES AUTHORS (id) ON DELETE CASCADE,
+    FOREIGN KEY (genre_id) REFERENCES GENRES (id) ON DELETE CASCADE
+);
+
 -- Комментарии
 DROP TABLE IF EXISTS COMMENTS;
 CREATE TABLE COMMENTS
 (
-    id   BIGINT auto_increment PRIMARY KEY,
-    text VARCHAR(255)
+    id      BIGINT auto_increment PRIMARY KEY,
+    book_id BIGINT NOT NULL,
+    text    VARCHAR(255),
+
+    CONSTRAINT FK_BOOK_ID FOREIGN KEY (book_id)
+        REFERENCES BOOKS (id) ON DELETE CASCADE
 );
-
-DROP TABLE IF EXISTS BOOKS;
-CREATE TABLE BOOKS
-(
-    id         BIGINT auto_increment PRIMARY KEY,
-    name       VARCHAR(255),
-    author_id  BIGINT,
-    genre_id   BIGINT,
-    comment_id BIGINT,
-
-    FOREIGN KEY (author_id) REFERENCES AUTHORS (id) ON DELETE CASCADE,
-    FOREIGN KEY (genre_id) REFERENCES GENRES (id) ON DELETE CASCADE,
-    FOREIGN KEY (comment_id) REFERENCES COMMENTS (id) ON DELETE CASCADE
-);
-
 
