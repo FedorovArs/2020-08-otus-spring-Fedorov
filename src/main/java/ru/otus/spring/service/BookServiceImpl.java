@@ -2,10 +2,10 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.dao.AuthorRepositoryJpa;
-import ru.otus.spring.dao.BookRepositoryJpa;
-import ru.otus.spring.dao.CommentRepositoryJpa;
-import ru.otus.spring.dao.GenreRepositoryJpa;
+import ru.otus.spring.repository.AuthorRepository;
+import ru.otus.spring.repository.BookRepository;
+import ru.otus.spring.repository.CommentRepository;
+import ru.otus.spring.repository.GenreRepository;
 import ru.otus.spring.entity.Author;
 import ru.otus.spring.entity.Book;
 import ru.otus.spring.entity.Comment;
@@ -17,35 +17,35 @@ import java.util.stream.Collectors;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final BookRepositoryJpa bookRepositoryJpa;
-    private final AuthorRepositoryJpa authorRepositoryJpa;
-    private final GenreRepositoryJpa genreRepositoryJpa;
-    private final CommentRepositoryJpa commentRepositoryJpa;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
+    private final CommentRepository commentRepository;
 
-    public BookServiceImpl(BookRepositoryJpa bookRepositoryJpa, AuthorRepositoryJpa authorRepositoryJpa,
-                           GenreRepositoryJpa genreRepositoryJpa, CommentRepositoryJpa commentRepositoryJpa) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
+                           GenreRepository genreRepository, CommentRepository commentRepository) {
 
-        this.bookRepositoryJpa = bookRepositoryJpa;
-        this.authorRepositoryJpa = authorRepositoryJpa;
-        this.genreRepositoryJpa = genreRepositoryJpa;
-        this.commentRepositoryJpa = commentRepositoryJpa;
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Transactional(readOnly = true)
     public String getAll() {
-        return bookRepositoryJpa.findAll().stream()
+        return bookRepository.findAll().stream()
                 .map(Book::toString)
                 .collect(Collectors.joining(",\n"));
     }
 
     @Transactional
     public void deleteById(long id) {
-        bookRepositoryJpa.deleteById(id);
+        bookRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public String getById(long id) {
-        Optional<Book> byId = bookRepositoryJpa.findById(id);
+        Optional<Book> byId = bookRepository.findById(id);
         if (byId.isPresent()) {
             return byId.get().toString();
         } else {
@@ -56,16 +56,16 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public String addNewBook(String bookName, String authorName, String genreName) {
 
-        Author author = authorRepositoryJpa.getByNameOrCreate(new Author(null, authorName));
-        Genre genre = genreRepositoryJpa.getByNameOrCreate(new Genre(null, genreName));
+        Author author = authorRepository.getByNameOrCreate(new Author(null, authorName));
+        Genre genre = genreRepository.getByNameOrCreate(new Genre(null, genreName));
 
-        bookRepositoryJpa.save(new Book(null, bookName, author, genre));
+        bookRepository.save(new Book(null, bookName, author, genre));
         return "Книга успешно добавлена";
     }
 
     @Transactional
     public String updateBook(long id, String newBookName, String newAuthor, String newGenre, String newComment) {
-        Optional<Book> optionalBook = bookRepositoryJpa.findById(id);
+        Optional<Book> optionalBook = bookRepository.findById(id);
 
         if (optionalBook.isEmpty()) {
             return "Книга с указанным id отсутсвует в БД";
@@ -77,11 +77,11 @@ public class BookServiceImpl implements BookService {
                 return "Книги с указанным id уже имеет указанные атрибуты. Изменения не требуются.";
             }
 
-            Author author = authorRepositoryJpa.getByNameOrCreate(new Author(null, newAuthor));
-            Genre genre = genreRepositoryJpa.getByNameOrCreate(new Genre(null, newGenre));
-            Comment comment = commentRepositoryJpa.getByTextOrCreate(new Comment(null, book, newComment));
+            Author author = authorRepository.getByNameOrCreate(new Author(null, newAuthor));
+            Genre genre = genreRepository.getByNameOrCreate(new Genre(null, newGenre));
+            Comment comment = commentRepository.getByTextOrCreate(new Comment(null, book, newComment));
 
-            bookRepositoryJpa.updateById(new Book(id, newBookName, author, genre, comment));
+            bookRepository.save(new Book(id, newBookName, author, genre, comment));
             return "Книга успешно обновлена";
         }
     }
