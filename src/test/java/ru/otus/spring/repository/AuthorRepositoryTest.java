@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.otus.spring.repository.BookRepositoryTest.CLASSIC_AUTHOR;
 
 @DataJpaTest
-@Transactional(propagation = Propagation.REQUIRED)
 @DisplayName("Repository для работы с авторами должен:")
 public class AuthorRepositoryTest {
 
@@ -24,6 +23,9 @@ public class AuthorRepositoryTest {
     private static final int ONE_EXPECT_AUTHORS_COUNT = 1;
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private CustomAuthorRepository customAuthorRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -39,7 +41,7 @@ public class AuthorRepositoryTest {
         assertThat(allAuthors).noneMatch(s -> s.getName().equalsIgnoreCase(CLASSIC_AUTHOR));
 
         Author newAuthor = new Author(null, CLASSIC_AUTHOR);
-        Author author = authorRepository.getByNameOrCreate(newAuthor);
+        Author author = customAuthorRepository.getByNameOrCreate(newAuthor);
 
         assertThat(author.getId()).isNotNull();
         int countAfterSave = queryFindByName.getResultList().size();
@@ -55,7 +57,7 @@ public class AuthorRepositoryTest {
         assertThat(authorsCountBeforeSearch).isEqualTo(ONE_EXPECT_AUTHORS_COUNT);
 
         Author hokingAuthor = new Author(null, STIVEN_HOKING);
-        Author author = authorRepository.getByNameOrCreate(hokingAuthor);
+        Author author = customAuthorRepository.getByNameOrCreate(hokingAuthor);
         assertThat(author.getId()).isNotNull();
 
         int authorsCountAfterSearch = queryFindByName.getResultList().size();

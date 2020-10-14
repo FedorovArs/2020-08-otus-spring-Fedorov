@@ -35,6 +35,7 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Genre genre;
 
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
 

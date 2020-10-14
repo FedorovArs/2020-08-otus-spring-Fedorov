@@ -16,7 +16,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Transactional(propagation = Propagation.REQUIRED)
 @DisplayName("Repository для работы с комментариями должен:")
 public class CommentRepositoryTest {
 
@@ -26,6 +25,9 @@ public class CommentRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private CustomCommentRepository customCommentRepository;
 
     @Autowired
     private BookRepository bookRepository;
@@ -45,7 +47,7 @@ public class CommentRepositoryTest {
 
         Book bookForTest = bookRepository.findById(1L).get();
         Comment newComment = new Comment(null, bookForTest, BAD_COMMENT);
-        Comment comment = commentRepository.getByTextOrCreate(newComment);
+        Comment comment = customCommentRepository.getByTextOrCreate(newComment);
 
         assertThat(comment.getId()).isNotNull();
         int countAfterSave = queryFindByName.getResultList().size();
@@ -62,7 +64,7 @@ public class CommentRepositoryTest {
 
         Book bookForTest = bookRepository.findById(1L).get();
         Comment newComment = new Comment(null, bookForTest, GOOD_COMMENT);
-        Comment comment = commentRepository.getByTextOrCreate(newComment);
+        Comment comment = customCommentRepository.getByTextOrCreate(newComment);
         assertThat(comment.getId()).isNotNull();
 
         int genresCountAfterSearch = queryFindByName.getResultList().size();

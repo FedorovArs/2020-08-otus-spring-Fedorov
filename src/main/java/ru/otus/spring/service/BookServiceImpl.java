@@ -2,14 +2,11 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.repository.AuthorRepository;
-import ru.otus.spring.repository.BookRepository;
-import ru.otus.spring.repository.CommentRepository;
-import ru.otus.spring.repository.GenreRepository;
 import ru.otus.spring.entity.Author;
 import ru.otus.spring.entity.Book;
 import ru.otus.spring.entity.Comment;
 import ru.otus.spring.entity.Genre;
+import ru.otus.spring.repository.*;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,17 +15,17 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
-    private final CommentRepository commentRepository;
+    private final CustomAuthorRepository customAuthorRepository;
+    private final CustomGenreRepository customGenreRepository;
+    private final CustomCommentRepository customCommentRepository;
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository,
-                           GenreRepository genreRepository, CommentRepository commentRepository) {
+    public BookServiceImpl(BookRepository bookRepository, CustomAuthorRepositoryImpl customAuthorRepository,
+                           CustomGenreRepository customGenreRepository, CustomCommentRepository customCommentRepository) {
 
         this.bookRepository = bookRepository;
-        this.authorRepository = authorRepository;
-        this.genreRepository = genreRepository;
-        this.commentRepository = commentRepository;
+        this.customCommentRepository = customCommentRepository;
+        this.customAuthorRepository = customAuthorRepository;
+        this.customGenreRepository = customGenreRepository;
     }
 
     @Transactional(readOnly = true)
@@ -56,8 +53,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public String addNewBook(String bookName, String authorName, String genreName) {
 
-        Author author = authorRepository.getByNameOrCreate(new Author(null, authorName));
-        Genre genre = genreRepository.getByNameOrCreate(new Genre(null, genreName));
+        Author author = customAuthorRepository.getByNameOrCreate(new Author(null, authorName));
+        Genre genre = customGenreRepository.getByNameOrCreate(new Genre(null, genreName));
 
         bookRepository.save(new Book(null, bookName, author, genre));
         return "Книга успешно добавлена";
@@ -77,9 +74,9 @@ public class BookServiceImpl implements BookService {
                 return "Книги с указанным id уже имеет указанные атрибуты. Изменения не требуются.";
             }
 
-            Author author = authorRepository.getByNameOrCreate(new Author(null, newAuthor));
-            Genre genre = genreRepository.getByNameOrCreate(new Genre(null, newGenre));
-            Comment comment = commentRepository.getByTextOrCreate(new Comment(null, book, newComment));
+            Author author = customAuthorRepository.getByNameOrCreate(new Author(null, newAuthor));
+            Genre genre = customGenreRepository.getByNameOrCreate(new Genre(null, newGenre));
+            Comment comment = customCommentRepository.getByTextOrCreate(new Comment(null, book, newComment));
 
             bookRepository.save(new Book(id, newBookName, author, genre, comment));
             return "Книга успешно обновлена";

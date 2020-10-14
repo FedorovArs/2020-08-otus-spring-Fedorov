@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.entity.Genre;
 
 import javax.persistence.Query;
@@ -16,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.otus.spring.repository.BookRepositoryTest.CLASSIC_GENRE;
 
 @DataJpaTest
-@Transactional(propagation = Propagation.REQUIRED)
 @DisplayName("Repository для работы с жанрами должен:")
 public class GenreRepositoryTest {
 
@@ -24,6 +21,9 @@ public class GenreRepositoryTest {
     private static final int ONE_EXPECT_GENRES_COUNT = 1;
     @Autowired
     private GenreRepository genreRepository;
+
+    @Autowired
+    private CustomGenreRepository customGenreRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -39,7 +39,7 @@ public class GenreRepositoryTest {
         assertThat(allGenres).noneMatch(s -> s.getName().equalsIgnoreCase(CLASSIC_GENRE));
 
         Genre newGenre = new Genre(null, CLASSIC_GENRE);
-        Genre genre = genreRepository.getByNameOrCreate(newGenre);
+        Genre genre = customGenreRepository.getByNameOrCreate(newGenre);
 
         assertThat(genre.getId()).isNotNull();
         int countAfterSave = queryFindByName.getResultList().size();
@@ -55,7 +55,7 @@ public class GenreRepositoryTest {
         assertThat(genresCountBeforeSearch).isEqualTo(ONE_EXPECT_GENRES_COUNT);
 
         Genre existsGenre = new Genre(null, IT_GENRE);
-        Genre genre = genreRepository.getByNameOrCreate(existsGenre);
+        Genre genre = customGenreRepository.getByNameOrCreate(existsGenre);
         assertThat(genre.getId()).isNotNull();
 
         int genresCountAfterSearch = queryFindByName.getResultList().size();

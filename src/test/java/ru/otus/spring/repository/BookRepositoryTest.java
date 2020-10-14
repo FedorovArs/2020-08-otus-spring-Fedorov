@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.entity.Author;
 import ru.otus.spring.entity.Book;
 import ru.otus.spring.entity.Comment;
@@ -24,13 +22,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
-@Transactional(propagation = Propagation.REQUIRED)
 @DisplayName("Repository для работы с книгами должен:")
 class BookRepositoryTest {
 
     public static final int DEFAULT_ROW_COUNT_AT_START = 4;
     public static final long FAKE_ID = 1000;
-    private static final long EXPECTED_QUERIES_COUNT = 1;
+    private static final long EXPECTED_QUERIES_COUNT = 2;
     public static final String CLASSIC_AUTHOR = "А.С. Пушкин";
     public static final String CLASSIC_GENRE = "Классика";
     private static final String EXCELLENT_BOOK_COMMENT = "Великолепная книга";
