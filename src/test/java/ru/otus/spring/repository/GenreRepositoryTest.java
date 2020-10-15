@@ -23,9 +23,6 @@ public class GenreRepositoryTest {
     private GenreRepository genreRepository;
 
     @Autowired
-    private CustomGenreRepository customGenreRepository;
-
-    @Autowired
     private TestEntityManager em;
 
     @DisplayName(" должен создать жанр если его нет в БД")
@@ -39,7 +36,7 @@ public class GenreRepositoryTest {
         assertThat(allGenres).noneMatch(s -> s.getName().equalsIgnoreCase(CLASSIC_GENRE));
 
         Genre newGenre = new Genre(null, CLASSIC_GENRE);
-        Genre genre = customGenreRepository.getByNameOrCreate(newGenre);
+        Genre genre = genreRepository.getByNameOrCreate(newGenre);
 
         assertThat(genre.getId()).isNotNull();
         int countAfterSave = queryFindByName.getResultList().size();
@@ -55,7 +52,7 @@ public class GenreRepositoryTest {
         assertThat(genresCountBeforeSearch).isEqualTo(ONE_EXPECT_GENRES_COUNT);
 
         Genre existsGenre = new Genre(null, IT_GENRE);
-        Genre genre = customGenreRepository.getByNameOrCreate(existsGenre);
+        Genre genre = genreRepository.getByNameOrCreate(existsGenre);
         assertThat(genre.getId()).isNotNull();
 
         int genresCountAfterSearch = queryFindByName.getResultList().size();

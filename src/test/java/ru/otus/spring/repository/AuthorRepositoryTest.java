@@ -25,9 +25,6 @@ public class AuthorRepositoryTest {
     private AuthorRepository authorRepository;
 
     @Autowired
-    private CustomAuthorRepository customAuthorRepository;
-
-    @Autowired
     private TestEntityManager em;
 
     @DisplayName(" должен создать автора если его нет в БД")
@@ -41,7 +38,7 @@ public class AuthorRepositoryTest {
         assertThat(allAuthors).noneMatch(s -> s.getName().equalsIgnoreCase(CLASSIC_AUTHOR));
 
         Author newAuthor = new Author(null, CLASSIC_AUTHOR);
-        Author author = customAuthorRepository.getByNameOrCreate(newAuthor);
+        Author author = authorRepository.getByNameOrCreate(newAuthor);
 
         assertThat(author.getId()).isNotNull();
         int countAfterSave = queryFindByName.getResultList().size();
@@ -57,7 +54,7 @@ public class AuthorRepositoryTest {
         assertThat(authorsCountBeforeSearch).isEqualTo(ONE_EXPECT_AUTHORS_COUNT);
 
         Author hokingAuthor = new Author(null, STIVEN_HOKING);
-        Author author = customAuthorRepository.getByNameOrCreate(hokingAuthor);
+        Author author = authorRepository.getByNameOrCreate(hokingAuthor);
         assertThat(author.getId()).isNotNull();
 
         int authorsCountAfterSearch = queryFindByName.getResultList().size();

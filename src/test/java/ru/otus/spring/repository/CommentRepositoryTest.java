@@ -27,9 +27,6 @@ public class CommentRepositoryTest {
     private CommentRepository commentRepository;
 
     @Autowired
-    private CustomCommentRepository customCommentRepository;
-
-    @Autowired
     private BookRepository bookRepository;
 
     @Autowired
@@ -47,7 +44,7 @@ public class CommentRepositoryTest {
 
         Book bookForTest = bookRepository.findById(1L).get();
         Comment newComment = new Comment(null, bookForTest, BAD_COMMENT);
-        Comment comment = customCommentRepository.getByTextOrCreate(newComment);
+        Comment comment = commentRepository.getByTextOrCreate(newComment);
 
         assertThat(comment.getId()).isNotNull();
         int countAfterSave = queryFindByName.getResultList().size();
@@ -64,7 +61,7 @@ public class CommentRepositoryTest {
 
         Book bookForTest = bookRepository.findById(1L).get();
         Comment newComment = new Comment(null, bookForTest, GOOD_COMMENT);
-        Comment comment = customCommentRepository.getByTextOrCreate(newComment);
+        Comment comment = commentRepository.getByTextOrCreate(newComment);
         assertThat(comment.getId()).isNotNull();
 
         int genresCountAfterSearch = queryFindByName.getResultList().size();
