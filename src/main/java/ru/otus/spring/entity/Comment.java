@@ -3,25 +3,22 @@ package ru.otus.spring.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
-
-@Table(name = "comments")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
+@Document(collation = "comments")
 public class Comment {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @JoinColumn(name = "book_id", nullable = false)
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    private Book book;
-
-    @Column(name = "text", nullable = false)
+    private String id;
+    private String bookId;
     private String text;
+
+    public Comment(String bookId, String text) {
+        this.bookId = bookId;
+        this.text = text;
+    }
 }

@@ -1,15 +1,15 @@
 package ru.otus.spring;
 
-import org.h2.tools.Console;
+import com.github.cloudyrock.spring.v5.EnableMongock;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.sql.SQLException;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
+@EnableMongock
+@EnableMongoRepositories(basePackages = "ru.otus.spring.repository")
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         SpringApplication.run(Main.class);
-        Console.main(args);
     }
 }

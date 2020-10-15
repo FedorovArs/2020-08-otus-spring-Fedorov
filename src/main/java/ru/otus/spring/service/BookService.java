@@ -4,12 +4,12 @@ public interface BookService {
 
     String getAll();
 
-    void deleteById(long id);
+    void deleteById(String id);
 
-    String getById(long id);
+    String getById(String id);
 
     String addNewBook(String bookName, String authorName, String genreName);
 
-    String updateBook(long id, String newBookName, String newAuthor, String newGenre, String newComment);
+    String updateBook(String id, String newBookName, String newAuthor, String newGenre, String newComment);
 
 }

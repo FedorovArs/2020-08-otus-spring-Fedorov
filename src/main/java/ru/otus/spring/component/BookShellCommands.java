@@ -28,7 +28,7 @@ public class BookShellCommands {
     }
 
     @ShellMethod(value = "Update book", key = {"update"})
-    public String update(@ShellOption(defaultValue = "1") long id,
+    public String update(@ShellOption(defaultValue = "1") String id,
                          @ShellOption String name,
                          @ShellOption String author,
                          @ShellOption String genre,
@@ -38,12 +38,12 @@ public class BookShellCommands {
     }
 
     @ShellMethod(value = "Get by id", key = {"get"})
-    public String getById(@ShellOption(defaultValue = "1") long id) {
+    public String getById(@ShellOption(defaultValue = "1") String id) {
         return bookServiceImpl.getById(id);
     }
 
     @ShellMethod(value = "Delete by id", key = {"delete"})
-    public void deleteById(@ShellOption(defaultValue = "1") long id) {
+    public void deleteById(@ShellOption(defaultValue = "1") String id) {
         bookServiceImpl.deleteById(id);
     }
 }

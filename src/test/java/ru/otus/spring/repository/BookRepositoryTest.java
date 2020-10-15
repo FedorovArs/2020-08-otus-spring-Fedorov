@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import ru.otus.spring.entity.Author;
 import ru.otus.spring.entity.Book;
 import ru.otus.spring.entity.Comment;
-import ru.otus.spring.entity.Genre;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
