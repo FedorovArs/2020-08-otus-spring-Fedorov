@@ -1,21 +1,22 @@
 package ru.otus.spring.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Table(name = "books")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Entity
+@Getter
+@Setter
 @NamedEntityGraph(name = "authors-entity-graph", attributeNodes = {@NamedAttributeNode("author")})
 public class Book {
 
@@ -56,14 +57,9 @@ public class Book {
 
     @Override
     public String toString() {
-        return '(' +
+        return "Book{" +
                 "id=" + id +
-                ", название='" + name +
-                ", автор=" + author.getName() +
-                ", жанр=" + genre.getName() +
-                ", комментарии=" + (comments == null || comments.isEmpty()
-                ? "Комментарии отсутствуют"
-                : comments.stream().map(Comment::getText).collect(Collectors.joining(", "))) +
-                ')';
+                ", name='" + name + '\'' +
+                '}';
     }
 }

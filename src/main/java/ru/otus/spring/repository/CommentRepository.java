@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.otus.spring.entity.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long>, CustomCommentRepository {
 }

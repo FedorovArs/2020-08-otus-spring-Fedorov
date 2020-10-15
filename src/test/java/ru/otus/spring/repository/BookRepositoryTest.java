@@ -4,9 +4,11 @@ import lombok.val;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import ru.otus.spring.service.PresentationServiceImpl;
 import ru.otus.spring.entity.Author;
 import ru.otus.spring.entity.Book;
 import ru.otus.spring.entity.Comment;
@@ -16,7 +18,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -207,9 +208,8 @@ class BookRepositoryTest {
         // Выполняется первый запрос к БД
         var books = bookRepository.findAll();
         // При обращении к LAZY полю происходит второй запрос к БД
-        String booksToString = books.stream()
-                .map(Book::toString)
-                .collect(Collectors.joining(", "));
+        PresentationServiceImpl presentationServiceImpl = Mockito.spy(PresentationServiceImpl.class);
+        String booksToString = presentationServiceImpl.convertBooksForShellPresentation(books);
 
         assertThat(booksToString).contains("Комментарии отсутствуют");
         assertThat(booksToString).contains("Хорошая книга");
