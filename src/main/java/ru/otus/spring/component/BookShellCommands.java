@@ -28,7 +28,7 @@ public class BookShellCommands {
     }
 
     @ShellMethod(value = "Update book", key = {"update"})
-    public String update(@ShellOption(defaultValue = "1") String id,
+    public String update(@ShellOption(defaultValue = "Book #1") String id,
                          @ShellOption String name,
                          @ShellOption String author,
                          @ShellOption String genre,

@@ -1,15 +1,17 @@
 package ru.otus.spring.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Document(collation = "books")
+@Getter
+@Setter
+@Document(collection = "books")
 public class Book {
 
     @Id
@@ -25,15 +27,5 @@ public class Book {
         this.name = name;
         this.author = author;
         this.genre = genre;
-    }
-
-    @Override
-    public String toString() {
-        return '(' +
-                "id=" + id +
-                ", название='" + name +
-                ", автор=" + author +
-                ", жанр=" + genre +
-                ')';
     }
 }

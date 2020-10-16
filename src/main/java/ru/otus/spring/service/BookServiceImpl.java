@@ -4,28 +4,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.entity.Book;
 import ru.otus.spring.entity.Comment;
-import ru.otus.spring.repository.*;
+import ru.otus.spring.repository.BookRepository;
+import ru.otus.spring.repository.CommentRepository;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final CommentRepository commentRepository;
+    private final PresentationService presentationService;
 
-    public BookServiceImpl(BookRepository bookRepository, CommentRepository commentRepository) {
+    public BookServiceImpl(BookRepository bookRepository, CommentRepository commentRepository,
+                           PresentationService presentationService) {
 
         this.bookRepository = bookRepository;
         this.commentRepository = commentRepository;
+        this.presentationService = presentationService;
     }
 
     @Transactional(readOnly = true)
     public String getAll() {
-        return bookRepository.findAll().stream()
-                .map(Book::toString)
-                .collect(Collectors.joining(",\n"));
+        List<Book> books = bookRepository.findAll();
+        return presentationService.convertBooksForShellPresentation(books);
     }
 
     @Transactional
@@ -37,7 +41,7 @@ public class BookServiceImpl implements BookService {
     public String getById(String id) {
         Optional<Book> byId = bookRepository.findById(id);
         if (byId.isPresent()) {
-            return byId.get().toString();
+            return presentationService.convertBooksForShellPresentation(Collections.singletonList(byId.get()));
         } else {
             return "Книга с указанным id отсутствует в БД";
         }
@@ -54,7 +58,7 @@ public class BookServiceImpl implements BookService {
         Optional<Book> optionalBook = bookRepository.findById(id);
 
         if (optionalBook.isEmpty()) {
-            return "Книга с указанным id отсутсвует в БД";
+            return "Книга с указанным id отсутствует в БД";
         } else {
             Book book = optionalBook.get();
             if (book.getName().equalsIgnoreCase(newBookName)

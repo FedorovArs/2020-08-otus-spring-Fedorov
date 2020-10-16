@@ -5,9 +5,5 @@ spring:
       database: test
 
 mongock:
-  runner-type: initializingbean
-  change-logs-scan-package: ru.otus.spring.mongock.changelog_test
-
-logging:
-  level:
-    root: ERROR
+  runner-type: ApplicationRunner
+  change-logs-scan-package: ru.otus.spring.mongock.changelog
