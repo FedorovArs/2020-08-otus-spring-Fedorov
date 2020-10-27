@@ -1,5 +1,0 @@
-multiple;Which of the following is not a keyword in the Java language?;new,static,Integer,goto;Integer;
-alternative;Java is a strongly typed programming language?;Yes,No;Yes;
-multiple;Which of the following are unchecked exceptions in Java?;NullPointerException,Exception,RuntimeException,IOException;RuntimeException;
-alternative;Does the Java programming language use a garbage collect?;Yes,No;Yes;
-alternative;Which data structure does not contain duplicates?;List,Set,Map;Set;
