@@ -1,13 +1,11 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/awesomeMongo
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
 
-mongock:
-  runner-type: InitializingBean
-  change-logs-scan-package: ru.otus.spring.mongock.changelog
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
 
-
-
-
-
+    show-sql: true
