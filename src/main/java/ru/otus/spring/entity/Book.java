@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import ru.otus.spring.dto.BookDto;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -61,5 +62,9 @@ public class Book {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public BookDto toDto() {
+        return new BookDto(this.id, this.name, this.getAuthor().getName(), this.getGenre().getName());
     }
 }

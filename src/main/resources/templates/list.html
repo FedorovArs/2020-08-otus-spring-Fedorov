@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="keywords" th:content="${keywords}"/>
     <title>List of all books</title>
     <style type="text/css">
         body {
@@ -13,10 +14,11 @@
             padding: 5px;
         }
     </style>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <h1>Books:</h1>
-<a th:href="@{/book/new}" href="save.html">Create book</a>
+<a th:href="@{/new}" href="save.html">Create book</a>
 
 <table class="books">
     <thead>
@@ -28,20 +30,45 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
-        <td th:text="${book.name}">Default Book Name</td>
-        <td th:text="${book.author.name}">Default Author</td>
-        <td th:text="${book.genre.name}">Default Genre</td>
-        <td>
-            <a th:href="@{/book/{id}(id=${book.id})}" href="edit.html">Edit</a>
-        </td>
-
-        <td>
-            <a th:href="@{/book/delete/{id}(id=${book.id})}">Delete</a>
-        </td>
-    </tr>
     </tbody>
 </table>
+<script>
+    $(function () {
+        $.get('/api/book').done(function (books) {
+            books.forEach(function (book) {
+                $('tbody').append(`
+                    <tr>
+                        <td>${book.id}</td>
+                        <td>${book.name}</td>
+                        <td>${book.author}</td>
+                        <td>${book.genre}</td>
+                        <td><a href="/edit/${book.id}" href="edit.html">Edit</a></td>
+                        <td><a class="deleteLink" href="${book.id}">Delete</a></td>
+                    </tr>
+                `)
+            });
+
+            $(".deleteLink").click(function (e) {
+                e.preventDefault();
+                let id = $(this).attr("href");
+                let deleteUrl = '/api/book/' + id;
+
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'DELETE',
+                    success: function (result) {
+                        if (result === true) {
+                            $('tbody > tr').each((item) => {
+                                if (item == id) {
+                                    alert("Удаляем строку с id" + item);
+                                }
+                            });
+                        }
+                    }
+                });
+            })
+        })
+    });
+</script>
 </body>
 </html>

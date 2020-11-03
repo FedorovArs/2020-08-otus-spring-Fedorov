@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.otus</groupId>
-    <artifactId>spring-16-homework</artifactId>
+    <artifactId>spring-17-homework</artifactId>
     <version>1.0.0.0</version>
-    <name>spring-16-homework</name>
-    <description>Homework_7</description>
+    <name>spring-17-homework</name>
+    <description>Homework_17</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -47,12 +47,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.3.1</version>
         </dependency>
 
     </dependencies>

@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="keywords" th:content="${keywords}"/>
     <title>Edit book</title>
     <style type="text/css">
         body {
@@ -21,36 +22,44 @@
             margin-top: 10px;
         }
     </style>
+<!--    Почему-то не могу подключить jquery. Получаю ошибку Uncaught SyntaxError: Unexpected token '<' + Uncaught ReferenceError: $ is not defined-->
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
-<form id="edit-form" th:action="@{/book/edit/__${book.id}__}" th:method="post" action="edit.html">
+<form id="edit-form" method="post" action="edit.html">
     <h1>Book Info:</h1>
 
     <div class="row">
         <label for="id-input">ID:</label>
-        <input id="id-input" type="text" readonly="readonly" th:value="${book.id}" value="1"/>
+        <input id="id-input" type="text" readonly="readonly" value=""/>
     </div>
 
     <div class="row">
         <label for="book-name">Name:</label>
-        <input id="book-name" name="name" type="text" th:value="${book.name}" value="John Doe"/>
+        <input id="book-name" name="name" type="text" value=""/>
     </div>
 
     <div class="row">
         <label for="book-author">Author:</label>
-        <input id="book-author" name="author" type="text" th:value="${book.author.name}" value="John Doe"/>
+        <input id="book-author" name="author" type="text" value=""/>
     </div>
 
     <div class="row">
         <label for="book-genre">Genre:</label>
-        <input id="book-genre" name="genre" type="text" th:value="${book.genre.name}" value="John Doe"/>
+        <input id="book-genre" name="genre" type="text" value=""/>
     </div>
 
     <div class="row">
         <button type="submit">Save</button>
     </div>
 </form>
+
+<script type="text/javascript">
+    $(function () {
+        console.log("ready!");
+    });
+</script>
 
 </body>
 </html>
