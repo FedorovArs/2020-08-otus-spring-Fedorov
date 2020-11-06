@@ -25,7 +25,7 @@
 </head>
 <body>
 
-<form id="createForm" th:action="@{/api/book/create}" th:method="post" action="save.html">
+<form id="createForm" th:action="@{/books}" th:method="post" action="save.html">
     <h1>New book:</h1>
 
     <div class="row">
@@ -62,12 +62,18 @@
             genre = $form.find('input[name="genre"]').val(),
             url = $form.attr('action');
 
-        /* отправляем данные методом POST */
-        var posting = $.post(url, {name: name, author: author, genre: genre});
-
-        posting.done(function () {
-            $(location).attr("href", '/');
-        });
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: JSON.stringify({name: name, author: author, genre: genre}),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        })
+            .statusCode({
+                200: function () {
+                    $(location).attr("href", '/');
+                }
+            });
     });
 </script>
 

@@ -34,7 +34,7 @@
 </table>
 <script>
     $(function () {
-        $.get('/api/book').done(function (books) {
+        $.get('/books').done(function (books) {
             books.forEach(function (book) {
                 $('tbody').append(`
                     <tr>
@@ -51,21 +51,22 @@
             $(".deleteLink").click(function (e) {
                 e.preventDefault();
                 let id = $(this).attr("href");
-                let deleteUrl = '/api/book/' + id;
+                let deleteUrl = '/books/' + id;
 
                 $.ajax({
                     url: deleteUrl,
-                    type: 'DELETE',
-                    success: function (result) {
-                        if (result === true) {
+                    type: 'DELETE'
+                })
+                    .statusCode({
+                        200: function () {
                             $('tbody > tr').each((item) => {
                                 if (item == id) {
-                                    alert("Удаляем строку с id" + item);
+                                    alert("Книга с id " + item + " удалена");
                                 }
                             });
+                            $(location).attr("href", '/');
                         }
-                    }
-                });
+                    });
             })
         })
     });

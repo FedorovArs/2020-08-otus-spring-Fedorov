@@ -12,7 +12,6 @@ import ru.otus.spring.repository.BookRepository;
 import ru.otus.spring.repository.GenreRepository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,10 +33,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    public BookDto addNewBook(Map<String, String> updatedData) {
-        String name = updatedData.get("name");
-        String author = updatedData.get("author");
-        String genre = updatedData.get("genre");
+    public BookDto addNewBook(BookDto bookDto) {
+        String name = bookDto.getName();
+        String author = bookDto.getAuthor();
+        String genre = bookDto.getGenre();
 
         Author authorEntity = authorRepository.getByNameOrCreate(new Author(null, author));
         Genre genreEntity = genreRepository.getByNameOrCreate(new Genre(null, genre));
@@ -55,11 +54,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto updateBook(long bookId, Map<String, String> updatedData) {
+    public BookDto updateBook(long bookId, BookDto bookDto) {
 
-        String name = updatedData.get("name");
-        String author = updatedData.get("author");
-        String genre = updatedData.get("genre");
+        String name = bookDto.getName();
+        String author = bookDto.getAuthor();
+        String genre = bookDto.getGenre();
 
         Book book = bookRepository.getOne(bookId);
 

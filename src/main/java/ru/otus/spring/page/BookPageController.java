@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping
 public class BookPageController {
 
     @GetMapping()
@@ -16,7 +16,7 @@ public class BookPageController {
         return "list";
     }
 
-    //    Поидее тут д.б. @PutMapping, но я не знаю как из формы отправить put запрос
+    //    ** нужны для того что бы передать id редактируемой книги
     @GetMapping(value = "/edit/**")
     public String editBookByIdPage(Model model) {
         model.addAttribute("keywords", "edit books");
@@ -33,7 +33,6 @@ public class BookPageController {
         return "redirect:/book";
     }
 
-    //    Поидее тут д.б. @DeleteMapping, но я не знаю как из формы отправить delete запрос
     @GetMapping(value = "/delete")
     public String deleteBookByIdPage() {
         return "redirect:/book";
