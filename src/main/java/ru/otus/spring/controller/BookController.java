@@ -5,10 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.entity.Book;
+import ru.otus.spring.model.BookDtoIn;
 import ru.otus.spring.service.BookService;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -32,13 +32,18 @@ public class BookController {
         return "edit";
     }
 
-    @PostMapping(value = "/book/edit/{id}")
-    public String editBookById(Model model,
-                               @PathVariable(value = "id") long bookId,
-                               @RequestBody Map<String, String> updatedData) {
+    @GetMapping(value = "/book/delete/{id}")
+    public String submitDeletionBookByIdPage(Model model,
+                                            @PathVariable(value = "id") int bookId) {
+        Book book = bookService.getById(bookId);
+        model.addAttribute("book", book);
+        return "submit_deletion";
+    }
 
-        bookService.updateBook(bookId, updatedData);
-        model.addAttribute("books", bookService.findAll());
+    @PostMapping(value = "/book/edit/{id}")
+    public String editBookById(@PathVariable(value = "id") long bookId,
+                               @ModelAttribute("book") BookDtoIn bookIn) {
+        bookService.updateBook(bookId, bookIn.getName(), bookIn.getAuthor(), bookIn.getGenre());
         return "redirect:/book";
     }
 
@@ -48,18 +53,14 @@ public class BookController {
     }
 
     @PostMapping(value = "/book/create")
-    public String addNewBook(Model model,
-                             @RequestBody Map<String, String> newBookData) {
-        bookService.addNewBook(newBookData);
-        model.addAttribute("books", bookService.findAll());
+    public String addNewBook(@ModelAttribute("book") BookDtoIn bookIn) {
+        bookService.addNewBook(bookIn.getName(), bookIn.getAuthor(), bookIn.getGenre());
         return "redirect:/book";
     }
 
-    @GetMapping(value = "/book/delete/{id}")
-    public String deleteBookById(Model model,
-                                 @PathVariable(value = "id") int bookId) {
+    @PostMapping(value = "/book/delete/{id}")
+    public String deleteBookById(@PathVariable(value = "id") int bookId) {
         bookService.deleteById(bookId);
-        model.addAttribute("books", bookService.findAll());
         return "redirect:/book";
     }
 }

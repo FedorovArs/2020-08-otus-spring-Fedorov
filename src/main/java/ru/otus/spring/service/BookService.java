@@ -3,7 +3,6 @@ package ru.otus.spring.service;
 import ru.otus.spring.entity.Book;
 
 import java.util.List;
-import java.util.Map;
 
 public interface BookService {
 
@@ -11,9 +10,9 @@ public interface BookService {
 
     Book getById(long id);
 
-    Book addNewBook(Map<String, String> newBookData);
+    Book addNewBook(String name, String author, String genre);
 
-    Book updateBook(long bookId, Map<String, String> updatedData);
+    Book updateBook(long bookId, String name, String author, String genre);
 
     List<Book> findAll();
 }
