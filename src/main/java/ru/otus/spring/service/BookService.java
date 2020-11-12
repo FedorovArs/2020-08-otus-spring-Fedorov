@@ -1,15 +1,18 @@
 package ru.otus.spring.service;
 
+import ru.otus.spring.dto.BookDto;
+
+import java.util.List;
+
 public interface BookService {
 
-    String getAll();
+    void deleteById(long id);
 
-    void deleteById(String id);
+    BookDto getById(long id);
 
-    String getById(String id);
+    BookDto addNewBook(BookDto bookDto);
 
-    String addNewBook(String bookName, String authorName, String genreName);
+    BookDto updateBook(long bookId, BookDto bookDto);
 
-    String updateBook(String id, String newBookName, String newAuthor, String newGenre, String newComment);
-
+    List<BookDto> findAll();
 }

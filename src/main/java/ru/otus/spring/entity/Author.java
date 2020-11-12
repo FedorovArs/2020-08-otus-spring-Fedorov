@@ -6,22 +6,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name = "comments")
+@Table(name = "authors")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class Comment {
+public class Author {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "book_id", nullable = false)
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    private Book book;
-
-    @Column(name = "text", nullable = false)
-    private String text;
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 }
