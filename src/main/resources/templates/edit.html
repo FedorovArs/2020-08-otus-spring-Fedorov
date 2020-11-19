@@ -63,7 +63,7 @@
     let bookId = splitUrl[splitUrl.length - 1];
 
     $(function () {
-        $.get('/books/' + bookId).done(function (book) {
+        $.get('/api/books/' + bookId).done(function (book) {
             $('#id-input').val(book.id);
             $('#book-name').val(book.name);
             $('#book-author').val(book.author);
@@ -82,7 +82,7 @@
                 name = $form.find('input[name="name"]').val(),
                 author = $form.find('input[name="author"]').val(),
                 genre = $form.find('input[name="genre"]').val(),
-                editUrl = "/books/" + bookId
+                editUrl = "/api/books/" + bookId
 
             $.ajax({
                 url: editUrl,
@@ -93,7 +93,7 @@
             })
                 .statusCode({
                     200: function () {
-                        $(location).attr("href", '/');
+                        $(location).attr("href", '/books');
                     }
                 });
         }

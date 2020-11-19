@@ -10,30 +10,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping
 public class BookPageController {
 
-    @GetMapping()
+    @GetMapping("/books")
     public String booksListPage(Model model) {
         model.addAttribute("keywords", "list best books, list books, list books free");
         return "list";
     }
 
-    //    ** нужны для того что бы передать id редактируемой книги
-    @GetMapping(value = "/edit/**")
+    @GetMapping(value = "/books/edit/{id}")
     public String editBookByIdPage(Model model) {
         model.addAttribute("keywords", "edit books");
         return "edit";
     }
 
-    @GetMapping(value = "/new")
+    @GetMapping(value = "/books/new")
     public String addNewBookPage() {
         return "save";
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/books/create")
     public String newBookRedirectPage() {
         return "redirect:/book";
     }
 
-    @GetMapping(value = "/delete")
+    @GetMapping(value = "/books/delete")
     public String deleteBookByIdPage() {
         return "redirect:/book";
     }
