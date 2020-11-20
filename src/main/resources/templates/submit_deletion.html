@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Edit book</title>
+    <title>Submit deletion book</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -24,8 +24,9 @@
 </head>
 <body>
 
-<form id="edit-form" th:action="@{/book/edit/__${book.id}__}" th:method="post" action="edit.html" modelAttribute="book">
-    <h1>Book Info:</h1>
+<form id="submit-deletion-form" th:action="@{/book/delete/__${book.id}__}" th:method="post" action="edit.html"
+      modelAttribute="book">
+    <h1>Do you really want to delete a book?</h1>
 
     <div class="row">
         <label for="id-input">ID:</label>
@@ -34,21 +35,23 @@
 
     <div class="row">
         <label for="book-name">Name:</label>
-        <input id="book-name" name="name" type="text" th:value="${book.name}" value="John Doe"/>
+        <input id="book-name" name="name" type="text" readonly="readonly" th:value="${book.name}" value="John Doe"/>
     </div>
 
     <div class="row">
         <label for="book-author">Author:</label>
-        <input id="book-author" name="author" type="text" th:value="${book.author.name}" value="John Doe"/>
+        <input id="book-author" name="author" type="text" readonly="readonly" th:value="${book.author.name}"
+               value="John Doe"/>
     </div>
 
     <div class="row">
         <label for="book-genre">Genre:</label>
-        <input id="book-genre" name="genre" type="text" th:value="${book.genre.name}" value="John Doe"/>
+        <input id="book-genre" name="genre" type="text" readonly="readonly" th:value="${book.genre.name}"
+               value="John Doe"/>
     </div>
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button type="submit" style="color: red">DELETE</button>
     </div>
 </form>
 
