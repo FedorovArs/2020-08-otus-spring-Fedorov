@@ -41,9 +41,8 @@ CREATE TABLE COMMENTS
 DROP TABLE IF EXISTS USERS;
 CREATE TABLE USERS
 (
-    id       BIGINT auto_increment PRIMARY KEY,
-    name     VARCHAR(255),
-    login    VARCHAR(255),
-    password VARCHAR(255),
-    role     VARCHAR(255)
+    login     VARCHAR(50) not null primary key,
+    position  VARCHAR(50) not null not null,
+    password  VARCHAR(50) not null,
+    authority VARCHAR(50) not null not null
 );
