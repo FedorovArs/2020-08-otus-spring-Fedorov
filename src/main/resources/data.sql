@@ -31,10 +31,10 @@ insert into COMMENTS (id, book_id, text)
 values (3, 2, 'Рекомендую');
 
 insert into USERS(login, position, password, authority)
-values ('user', '1', 'password1', 'USER');
+values ('user', '1', 'user', 'USER');
 insert into USERS(login, position, password, authority)
-values ('manager', '2', 'password2', 'MANAGER');
+values ('manager', '2', 'manager', 'MANAGER');
 insert into USERS(login, position, password, authority)
-values ('admin', '3', 'password3', 'ADMIN');
+values ('admin', '3', 'admin', 'ADMIN');
 insert into USERS(login, position, password, authority)
-values ('guest', '4', 'password4', 'GUEST');
+values ('guest', '4', 'guest', 'GUEST');
