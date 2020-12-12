@@ -29,12 +29,3 @@ insert into COMMENTS (id, book_id, text)
 values (2, 1, 'Классная книга');
 insert into COMMENTS (id, book_id, text)
 values (3, 2, 'Рекомендую');
-
-insert into USERS(login, position, password, authority)
-values ('user', '1', 'user', 'USER');
-insert into USERS(login, position, password, authority)
-values ('manager', '2', 'manager', 'MANAGER');
-insert into USERS(login, position, password, authority)
-values ('admin', '3', 'admin', 'ADMIN');
-insert into USERS(login, position, password, authority)
-values ('guest', '4', 'guest', 'GUEST');

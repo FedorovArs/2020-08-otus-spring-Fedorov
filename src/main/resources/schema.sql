@@ -37,12 +37,3 @@ CREATE TABLE COMMENTS
         REFERENCES BOOKS (id) ON DELETE CASCADE
 );
 
--- Пользователи
-DROP TABLE IF EXISTS USERS;
-CREATE TABLE USERS
-(
-    login     VARCHAR(50) not null primary key,
-    position  VARCHAR(50) not null,
-    password  VARCHAR(50) not null,
-    authority VARCHAR(50) not null
-);

@@ -1,4 +1,4 @@
-package ru.otus.spring.entity;
+package ru.otus.spring.entity.sql;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

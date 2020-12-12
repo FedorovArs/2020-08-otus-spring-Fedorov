@@ -1,13 +1,15 @@
 package ru.otus.spring;
 
+import org.h2.tools.Console;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+
+import java.sql.SQLException;
 
 @SpringBootApplication
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         SpringApplication.run(Main.class);
+        Console.main(args);
     }
 }

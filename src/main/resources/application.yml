@@ -1,7 +1,28 @@
 spring:
+  batch:
+    job:
+      enabled: false
+  shell:
+    interactive:
+      enabled: true
+
   datasource:
     url: jdbc:h2:mem:testdb
-    initialization-mode: always
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  data:
+    mongodb:
+      #uri: mongodb://localhost
+      host: localhost
+      port: 27017
+      database: SpringBatchExampleDB
 
   jpa:
     generate-ddl: false
@@ -9,3 +30,8 @@ spring:
       ddl-auto: none
 
     show-sql: true
+
+
+
+
+
