@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.otus</groupId>
-    <artifactId>spring-22-homework</artifactId>
+    <artifactId>spring-30-homework</artifactId>
     <version>1.0.0.0</version>
-    <name>spring-22-homework</name>
-    <description>Homework_22</description>
+    <name>spring-30-homework</name>
+    <description>Homework_30</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -67,6 +67,28 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <version>${spring-security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
+        <!--        Default start page http://localhost:8080/browser/index.html or http://localhost:8080/-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-hal-browser</artifactId>
+            <version>3.2.6.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 
     </dependencies>

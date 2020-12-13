@@ -9,3 +9,33 @@ spring:
       ddl-auto: none
 
     show-sql: true
+
+  data:
+    rest:
+      #      Пример http://localhost:8080/datarest/book
+      basePath: /datarest
+
+  jmx:
+    enabled: true
+
+logging:
+  file:
+    name: LogFile.log
+    #    Параметр max-size выставлен такой маленький для того, что бы продемонстрировать работу rolling-file-name
+    max-size: 5KB
+  level:
+    root: INFO
+  pattern:
+    rolling-file-name: LogFile-%d{yyyy-MM-dd}.%i.log
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
