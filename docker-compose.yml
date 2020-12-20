@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    privileged: true
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_DRIVER=org.postgresql.Driver
+      - DB_URL=jdbc:postgresql://postgres:5433/db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - WAIT_FOR=postgres:5433
+    networks:
+      - nw
+  postgres:
+    image: "postgres"
+    ports:
+      - "5433:5433"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
+    networks:
+      - nw
+networks:
+  nw:
+
+#    sudo docker-compose -f docker-compose.yml up - запуск 2-ух контейнеров
