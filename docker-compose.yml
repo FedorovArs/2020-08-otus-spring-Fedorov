@@ -6,26 +6,31 @@ services:
       dockerfile: Dockerfile
     privileged: true
     ports:
-      - "8080:8080"
+      - 8080:8080
     environment:
-      - DB_DRIVER=org.postgresql.Driver
-      - DB_URL=jdbc:postgresql://postgres:5433/db
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-      - WAIT_FOR=postgres:5433
+      SPRING_DATASOURCE_POSTGRES_DRIVER: org.postgresql.Driver
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      WAIT_FOR: postgres:5432
     networks:
       - nw
   postgres:
-    image: "postgres"
+    image: postgres
     ports:
-      - "5433:5433"
+      - 5432:5432
+    volumes:
+      - ./pg_data:/var/lib/postgressql/data/pgdata
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+      PG_DATA: /var/lib/postgressql/data/pgdata
+    restart: always
     networks:
       - nw
 networks:
   nw:
 
-#    sudo docker-compose -f docker-compose.yml up - запуск 2-ух контейнеров
+#    sudo docker-compose build - сборка/пересборка 2-ух контейнеров
+#    sudo docker-compose up - запуск 2-ух контейнеров
