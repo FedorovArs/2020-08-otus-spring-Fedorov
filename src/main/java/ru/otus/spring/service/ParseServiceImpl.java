@@ -42,6 +42,12 @@ public class ParseServiceImpl implements ParseService {
 
     @Override
     public Question parseQuestionRow(String[] row) {
+        final int QUESTION_TYPE_INDEX = 0;
+        final int QUESTION_TEXT_INDEX = 1;
+        final int ANSWERS_TEXT_INDEX = 2;
+        final int CORRECT_ANSWER_TEXT_INDEX = 3;
+        final String ANSWERS_DEFAULT_DELIMITER = ",";
+
         String type = row[QUESTION_TYPE_INDEX];
         String text = row[QUESTION_TEXT_INDEX];
         String correctAnswer = row[CORRECT_ANSWER_TEXT_INDEX];

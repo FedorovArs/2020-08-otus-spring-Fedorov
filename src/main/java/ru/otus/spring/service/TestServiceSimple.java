@@ -32,7 +32,6 @@ public class TestServiceSimple implements TestService {
 
     @Override
     public void runTest(List<Question> questions) {
-//        String name = askUserAndGetAnswer(dataProducerComponent.getLocalizeMsg("ask.name"));
         openedConsoleIOService.out(dataProducerComponent.getLocalizeMsg("ask.name"));
         String name = openedConsoleIOService.readString();
 
