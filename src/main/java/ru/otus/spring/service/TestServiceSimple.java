@@ -7,22 +7,20 @@ import ru.otus.spring.domain.Question;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.otus.spring.Utils.scan;
-
 @Service
 public class TestServiceSimple implements TestService {
 
     private final int minSuccessfulValue;
-    private final DataProducerComponent dataProducerComponent;
-    private final OpenedConsoleIOService openedConsoleIOService;
+    private final IOService iOService;
+    private final LocalizationService localizeProducer;
 
     public TestServiceSimple(@Value("${questions.min.value}") int minSuccessfulValue,
-                             DataProducerComponent dataProducerComponent,
-                             OpenedConsoleIOService openedConsoleIOService
+                             IOService iOService,
+                             LocalizationService localizeProducer
     ) {
         this.minSuccessfulValue = minSuccessfulValue;
-        this.dataProducerComponent = dataProducerComponent;
-        this.openedConsoleIOService = openedConsoleIOService;
+        this.iOService = iOService;
+        this.localizeProducer = localizeProducer;
     }
 
     @Override
@@ -32,11 +30,11 @@ public class TestServiceSimple implements TestService {
 
     @Override
     public void runTest(List<Question> questions) {
-        openedConsoleIOService.out(dataProducerComponent.getLocalizeMsg("ask.name"));
-        String name = openedConsoleIOService.readString();
+        iOService.out(localizeProducer.getMessage("ask.name"));
+        String name = iOService.readString();
 
-        openedConsoleIOService.out(dataProducerComponent.getLocalizeMsg("ask.surname"));
-        String surname = openedConsoleIOService.readString();
+        iOService.out(localizeProducer.getMessage("ask.surname"));
+        String surname = iOService.readString();
 
         //mix questions
         Collections.shuffle(questions);
@@ -45,17 +43,17 @@ public class TestServiceSimple implements TestService {
         for (int i = 0; i < questions.size(); i++) {
             Question question = questions.get(i);
 
-            openedConsoleIOService.out(String.format("%s. " + dataProducerComponent.getLocalizeMsg("question.word") + ": %s", i + 1, question.getText()));
-            openedConsoleIOService.out(String.format(dataProducerComponent.getLocalizeMsg("possible.answers") + ": %s", question.getAnswers()));
+            iOService.out(String.format("%s. " + localizeProducer.getMessage("question.word") + ": %s", i + 1, question.getText()));
+            iOService.out(String.format(localizeProducer.getMessage("possible.answers") + ": %s", question.getAnswers()));
 
-            question.setUserAnswer(openedConsoleIOService.readString());
-            openedConsoleIOService.out("=========================================================================");
+            question.setUserAnswer(iOService.readString());
+            iOService.out("=========================================================================");
         }
 
         int passedTest = getTestPercentsResults(questions);
-        openedConsoleIOService.out(String.format(dataProducerComponent.getLocalizeMsg("result.msg"), surname, name, passedTest));
-        openedConsoleIOService.out(passedTest < minSuccessfulValue ? dataProducerComponent.getLocalizeMsg("test.failed.msg") :
-                dataProducerComponent.getLocalizeMsg("test.passed.msg"));
+        iOService.out(String.format(localizeProducer.getMessage("result.msg"), surname, name, passedTest));
+        iOService.out(passedTest < minSuccessfulValue ? localizeProducer.getMessage("test.failed.msg") :
+                localizeProducer.getMessage("test.passed.msg"));
     }
 
     private int getTestPercentsResults(List<Question> questions) {
@@ -68,10 +66,5 @@ public class TestServiceSimple implements TestService {
         }
 
         return (int) (((double) result) / questions.size() * 100);
-    }
-
-    private String askUserAndGetAnswer(String answer) {
-        System.out.println(answer);
-        return scan.nextLine().trim();
     }
 }

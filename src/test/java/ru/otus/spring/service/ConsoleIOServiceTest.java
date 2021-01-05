@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Execution(ExecutionMode.CONCURRENT)
 @DisplayName("Тест OpenedConsoleIOService")
-public class OpenedConsoleIOServiceTest {
+public class ConsoleIOServiceTest {
 
     private static final String TEXT_1 = "Текст для печати №1";
     private static final String TEXT_2 = "Текст для печати №2";
@@ -26,7 +26,7 @@ public class OpenedConsoleIOServiceTest {
     @BeforeEach
     void setUp() {
         byteStream = new ByteArrayOutputStream();
-        ioService = new OpenedConsoleIOService(System.in, new PrintStream(byteStream));
+        ioService = new ConsoleIOService(System.in, new PrintStream(byteStream));
     }
 
     @DisplayName("должно печатать \"" + TEXT_1 + "\"")

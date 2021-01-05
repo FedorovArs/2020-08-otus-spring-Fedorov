@@ -1,7 +1,5 @@
 package ru.otus.spring;
 
-import java.util.Scanner;
-
 public class Utils {
-    public static Scanner scan = new Scanner(System.in);
+    public static final String fileNameTemplate = "/%s_questions.csv";
 }

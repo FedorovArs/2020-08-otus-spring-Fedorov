@@ -19,9 +19,6 @@ class TestServiceSimpleTest {
     private ru.otus.spring.service.TestService testService;
 
     @Autowired
-    private DataProducer questionService;
-
-    @Autowired
     private ResourceLoader resourceLoader;
 
 
@@ -32,7 +29,7 @@ class TestServiceSimpleTest {
 
     @Test
     public void defaultNumberOfQuestionsShouldBeIs5() {
-        assertEquals(questionService.getQuestionsList().size(), DEFAULT_QUESTIONS_COUNT);
+        assertEquals(resourceLoader.getQuestionsList().size(), DEFAULT_QUESTIONS_COUNT);
     }
 
     @Test
