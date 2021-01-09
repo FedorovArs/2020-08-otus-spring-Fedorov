@@ -12,8 +12,8 @@ public class ConsoleIOService implements IOService {
     private final PrintStream out;
     private final Scanner sc;
 
-    public ConsoleIOService(@Value("#{ T(java.lang.System).in}") InputStream in,
-                            @Value("#{ T(java.lang.System).out}") PrintStream out) {
+    public ConsoleIOService(@Value("#{T(java.lang.System).in}") InputStream in,
+                            @Value("#{T(java.lang.System).out}") PrintStream out) {
         this.out = out;
         this.sc = new Scanner(in);
     }
@@ -21,6 +21,11 @@ public class ConsoleIOService implements IOService {
     @Override
     public void out(String message) {
         out.println(message);
+    }
+
+    @Override
+    public void out(String format, Object... args) {
+        out.printf(format, args);
     }
 
     @Override

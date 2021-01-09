@@ -5,7 +5,7 @@ import ru.otus.spring.domain.Question;
 import java.io.InputStream;
 import java.util.List;
 
-public interface ParseService {
+public interface QuestionsCsvParser {
 
     List<String> parseCsvResource(InputStream resource);
 

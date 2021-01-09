@@ -11,16 +11,13 @@ import java.util.List;
 public class TestServiceSimple implements TestService {
 
     private final int minSuccessfulValue;
-    private final IOService iOService;
-    private final LocalizationService localizeProducer;
+    private final MessageIOServiceWrapper messageIOServiceWrapper;
 
     public TestServiceSimple(@Value("${questions.min.value}") int minSuccessfulValue,
-                             IOService iOService,
-                             LocalizationService localizeProducer
+                             MessageIOServiceWrapper messageIOServiceWrapper
     ) {
         this.minSuccessfulValue = minSuccessfulValue;
-        this.iOService = iOService;
-        this.localizeProducer = localizeProducer;
+        this.messageIOServiceWrapper = messageIOServiceWrapper;
     }
 
     @Override
@@ -30,11 +27,11 @@ public class TestServiceSimple implements TestService {
 
     @Override
     public void runTest(List<Question> questions) {
-        iOService.out(localizeProducer.getMessage("ask.name"));
-        String name = iOService.readString();
+        messageIOServiceWrapper.out(messageIOServiceWrapper.getMessage("ask.name"));
+        String name = messageIOServiceWrapper.readString();
 
-        iOService.out(localizeProducer.getMessage("ask.surname"));
-        String surname = iOService.readString();
+        messageIOServiceWrapper.out(messageIOServiceWrapper.getMessage("ask.surname"));
+        String surname = messageIOServiceWrapper.readString();
 
         //mix questions
         Collections.shuffle(questions);
@@ -43,17 +40,17 @@ public class TestServiceSimple implements TestService {
         for (int i = 0; i < questions.size(); i++) {
             Question question = questions.get(i);
 
-            iOService.out(String.format("%s. " + localizeProducer.getMessage("question.word") + ": %s", i + 1, question.getText()));
-            iOService.out(String.format(localizeProducer.getMessage("possible.answers") + ": %s", question.getAnswers()));
+            messageIOServiceWrapper.out("%s. " + messageIOServiceWrapper.getMessage("question.word") + ": %s", i + 1, question.getText());
+            messageIOServiceWrapper.out(messageIOServiceWrapper.getMessage("possible.answers") + ": %s %s", question.getAnswers(), "\n");
 
-            question.setUserAnswer(iOService.readString());
-            iOService.out("=========================================================================");
+            question.setUserAnswer(messageIOServiceWrapper.readString());
+            messageIOServiceWrapper.out("=========================================================================");
         }
 
         int passedTest = getTestPercentsResults(questions);
-        iOService.out(String.format(localizeProducer.getMessage("result.msg"), surname, name, passedTest));
-        iOService.out(passedTest < minSuccessfulValue ? localizeProducer.getMessage("test.failed.msg") :
-                localizeProducer.getMessage("test.passed.msg"));
+        messageIOServiceWrapper.out(messageIOServiceWrapper.getMessage("result.msg"), surname, name, passedTest);
+        messageIOServiceWrapper.out(passedTest < minSuccessfulValue ? messageIOServiceWrapper.getMessage("test.failed.msg") :
+                messageIOServiceWrapper.getMessage("test.passed.msg"));
     }
 
     private int getTestPercentsResults(List<Question> questions) {

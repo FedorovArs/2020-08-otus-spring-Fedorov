@@ -3,6 +3,7 @@ package ru.otus.spring.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.otus.spring.component.LocalePropsProducer;
 import ru.otus.spring.dao.ResourceLoader;
 
 import java.util.Locale;
@@ -21,6 +22,9 @@ class TestServiceSimpleTest {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Autowired
+    private LocalePropsProducer localePropsProducer;
+
 
     @Test
     public void defaultPassingScoreShouldBeIs75() {
@@ -34,6 +38,6 @@ class TestServiceSimpleTest {
 
     @Test
     public void defaultLocaleMustBeRuRu() {
-        assertEquals(new Locale("ru", "RU"), resourceLoader.getLocale());
+        assertEquals(new Locale("ru", "RU"), localePropsProducer.getLocale());
     }
 }

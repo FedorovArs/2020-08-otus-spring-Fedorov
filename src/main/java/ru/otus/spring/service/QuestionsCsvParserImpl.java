@@ -1,6 +1,6 @@
 package ru.otus.spring.service;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Question;
 import ru.otus.spring.domain.QuestionType;
 
@@ -13,8 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
-public class ParseServiceImpl implements ParseService {
+// Поставщик данных
+@Repository
+public class QuestionsCsvParserImpl implements QuestionsCsvParser {
 
     @Override
     public List<String> parseCsvResource(InputStream resource) {

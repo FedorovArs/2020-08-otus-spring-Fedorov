@@ -1,4 +1,4 @@
-package ru.otus.spring.component;
+package ru.otus.spring.shell;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @ShellComponent
 @RequiredArgsConstructor
-public class QuestionShellImpl implements QuestionShell {
+public class QuestionShell {
 
     private final ResourceLoader resourceLoader;
     private final TestService testService;

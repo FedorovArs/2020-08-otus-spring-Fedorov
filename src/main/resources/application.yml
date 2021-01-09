@@ -2,6 +2,7 @@ questions:
   min:
     value: 75
   file:
+    name_template: /%s_questions.csv
     en_path: /en_questions.csv
     ru_path: /ru_questions.csv
 
