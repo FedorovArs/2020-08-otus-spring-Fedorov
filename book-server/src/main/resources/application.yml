@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+hystrix:
+  command:
+    copyBookNames:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
+
+    #      Добавил, что бы не потерять, в приложении ни как не используется
+    #      metrics:
+    #        rollingStats:
+    #          timeInMilliseconds: 15000
+    #      circuitBreaker:
+    #        requestVolumeThreshold: 10
+    #        errorThresholdPercentage: 50
+    #        sleepWindowInMilliseconds: 6
+
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+
