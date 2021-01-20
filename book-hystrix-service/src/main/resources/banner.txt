@@ -1,7 +1,0 @@
-${AnsiColor.BLUE}      ____             __     ______          __                __            _
-${AnsiColor.BLUE}     / __ \____  _____/ /_   /_  __/__  _____/ /_  ____  ____  / /___  ____ _(_)__  _____
-${AnsiColor.BLUE}    / /_/ / __ \/ ___/ __/    / / / _ \/ ___/ __ \/ __ \/ __ \/ / __ \/ __ `/ / _ \/ ___/
-${AnsiColor.BLUE}   / ____/ /_/ (__  ) /_     / / /  __/ /__/ / / / / / / /_/ / / /_/ / /_/ / /  __(__  )
-${AnsiColor.BLUE}  /_/    \____/____/\__/    /_/  \___/\___/_/ /_/_/ /_/\____/_/\____/\__, /_/\___/____/
-${AnsiColor.YELLOW}  :: Spring Boot${spring-boot.formatted-version} :: ${AnsiColor.BLUE}                               /____/
-${AnsiColor.DEFAULT}
