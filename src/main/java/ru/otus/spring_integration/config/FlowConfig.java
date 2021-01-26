@@ -1,14 +1,19 @@
-package ru.otus.spring_integration.component;
+package ru.otus.spring_integration.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.scheduling.PollerMetadata;
-import org.springframework.stereotype.Component;
+import ru.otus.spring_integration.service.AnimalHelper;
 
-@Component
-public class Flow {
+@Configuration
+@RequiredArgsConstructor
+public class FlowConfig {
+
+    private final AnimalHelper animalHelper;
 
     @Bean(name = PollerMetadata.DEFAULT_POLLER)
     public PollerMetadata poller() {
@@ -18,9 +23,9 @@ public class Flow {
     @Bean
     public IntegrationFlow animalFlow() {
         return IntegrationFlows.from("p2pQueueChannel")
-                .handle("AnimalHelper", "setRandomAge")
-                .handle("AnimalHelper", "setRandomAnimalClass")
-                .handle("AnimalHelper", "setRandomMeetType")
+                .handle(animalHelper, "setRandomAge")
+                .handle(animalHelper, "setRandomAnimalClass")
+                .handle(animalHelper, "setRandomMeetType")
                 .channel("publishSubscribeChannel")
                 .get();
     }

@@ -12,6 +12,7 @@ import ru.otus.spring_integration.model.animal.AnimalClass;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -27,10 +28,15 @@ public class AnimalServiceImpl implements AnimalService {
     public Map<AnimalClass, Long> processAnimalsAndGetStatistics(List<String> animals) {
 
         List<Animal> newAnimals = new ArrayList<>();
+        CountDownLatch lock = new CountDownLatch(animals.size());
 
         publishSubscribeChannel.subscribe(s -> System.out.printf("!!! Новый обитатель %s поставлен на довольствие \n", s.getPayload()));
         publishSubscribeChannel.subscribe(s -> System.out.printf("??? Новому обитателю %s определён вольер \n", s.getPayload()));
-        publishSubscribeChannel.subscribe(s -> newAnimals.add((Animal) s.getPayload()));
+        publishSubscribeChannel.subscribe(s -> {
+                    newAnimals.add((Animal) s.getPayload());
+                    lock.countDown();
+                }
+        );
 
         animals.forEach(name -> {
             p2pQueueChannel.send(
@@ -39,8 +45,7 @@ public class AnimalServiceImpl implements AnimalService {
                             .build());
         });
 
-        // Как избавиться от этого sleep? Как понять что все новые животные прошли обработку?
-        TimeUnit.SECONDS.sleep(1);
+        lock.await();
 
         return newAnimals
                 .stream()
