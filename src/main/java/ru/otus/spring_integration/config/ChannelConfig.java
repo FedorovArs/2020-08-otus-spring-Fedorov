@@ -23,4 +23,12 @@ public class ChannelConfig {
                 .minSubscribers(1)
                 .get();
     }
+
+    @Bean
+    public PublishSubscribeChannel animalFilterDiscardChannel() {
+        return MessageChannels
+                .publishSubscribe()
+                .minSubscribers(1)
+                .get();
+    }
 }

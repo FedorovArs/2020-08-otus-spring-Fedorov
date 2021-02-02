@@ -2,6 +2,7 @@ package ru.otus.spring_integration.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
@@ -13,15 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AnimalServiceImpl implements AnimalService {
 
     private final MessageChannel p2pQueueChannel;
     private final PublishSubscribeChannel publishSubscribeChannel;
+    private final PublishSubscribeChannel animalFilterDiscardChannel;
 
     @SneakyThrows
     @Override
@@ -37,6 +39,11 @@ public class AnimalServiceImpl implements AnimalService {
                     lock.countDown();
                 }
         );
+
+        animalFilterDiscardChannel.subscribe(s -> {
+            log.error("!!! Никаких вредителей в моём зоопарке!");
+            lock.countDown();
+        });
 
         animals.forEach(name -> {
             p2pQueueChannel.send(
